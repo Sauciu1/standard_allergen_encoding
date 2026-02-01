@@ -17,7 +17,7 @@ class AllergiesEncoder:
             group_list = self.lowercase_list(group_df['allergen'].tolist())
             self.lists[group] = group_list
 
-
+        self.all_list = self.lowercase_list(list(numpy.concatenate(list(self.lists.values()))))
         
     @staticmethod
     def lowercase_list(items:list[str])->list[str]:
@@ -29,13 +29,13 @@ class AllergiesEncoder:
         for allergen in active_list:
             if allergen not in ref_list:
                 continue
+
             index = ref_list.index(allergen)
             encoding |= (1 << index)
         return encoding
 
     def _encode_main(self, allergens:list[str])->int:
         allergens = self.lowercase_list(allergens)
-       
         return self.__encode(allergens, self.lists['main'])
 
     def __decode_main(self, encoding:int, ref_list):
@@ -52,36 +52,50 @@ class AllergiesEncoder:
     def _encode_secondary_group(self, allergens:list[str])->list[int]:
         allergens = self.lowercase_list(allergens)
         allergen_subgroups = {}
-        
         for group, allergen_list in self.lists.items():
-
             if group == 'main':
                 continue
             for allergen in allergens:
                 if allergen in allergen_list:
                     allergen_subgroups[group] = allergen_subgroups.get(group,set())| {allergen}
-        print(allergen_subgroups)
+  
 
         ref_list =[0,1,2,3,4,5]
-
         map_encode = self.__encode(list(allergen_subgroups.keys()), ref_list)
-
+        group_5 = allergen_subgroups.pop(5, None)
+        if group_5:
+            map_encode |= (self.__encode(list(group_5), self.lists[5]) << 6)
         subgroup_encodes = [self.__encode(list(allergen_subgroups[group]), self.lists[group]) for group in allergen_subgroups]
-
         return [map_encode, *subgroup_encodes]
     
 
     def _decode_secondary_group(self, encodings:list[int])->list[str]:
-        ref_list =[0,1,2,3,4,5]
-        group_map = self.__decode_main(encodings[0], ref_list)
+        ref_list = [0, 1, 2, 3, 4, 5]
+
+        map_encode = encodings[0]
+        group_5_encoding = map_encode >> 6
+        map_encode_lower = map_encode & 0b11111  # Keep only lower 5 bits
+
+        group_map = self.__decode_main(map_encode_lower, ref_list)
         decoded_allergens = []
+        
         for i, group in enumerate(group_map):
-            subgroup_encoding = encodings[i+1]
+            subgroup_encoding = encodings[i + 1]
             decoded_allergens.extend(self.__decode_main(subgroup_encoding, self.lists[group]))
+        
+        # Decode group 5 from upper bits if present
+        if group_5_encoding:
+            decoded_allergens.extend(self.__decode_main(group_5_encoding, self.lists[5]))
+        
         return decoded_allergens
     
 
     def encode_all(self, allergens:list[str])->list[int]:
+        allergens = self.lowercase_list(allergens)
+        for allergen in allergens:
+            if allergen not in self.all_list:
+                raise ValueError(f"Allergen '{allergen}' not recognized.")
+
         main=  self._encode_main(allergens)
         secondary = self._encode_secondary_group(allergens)
         return [main, *secondary]
@@ -92,16 +106,13 @@ class AllergiesEncoder:
         return [*main, *secondary]
        
     
-
-
-
 if __name__ == "__main__":
     encoder = AllergiesEncoder()
-    test_allergens = ['Pine nut', 'eggs', 'Milk', 'peanuts']
+    test_allergens = ['Pine nut', 'eggs', 'Milk', 'peanuts', 'tuna']
     encoded = encoder.encode_all(test_allergens)
     print("Encoded:", encoded)
     decoded = encoder.decode_all(encoded)
     print("Decoded:", decoded)
 
-    
+
 
