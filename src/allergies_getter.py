@@ -54,15 +54,24 @@ class AllergiesGetter:
         """
         # Encode allergens to number
         encoded_number = self.encoder.encode_allergy(allergens)
-        # logger.info(f"Encoded allergens {allergens} to number: {encoded_number}")
+        
+        # Check if encoding is within database range
+        total_words = self.db.get_total_words()
+        if encoded_number > total_words:
+            logger.warning(
+                f"Encoded number {encoded_number} exceeds database size ({total_words} words). "
+                f"This allergen combination cannot be represented."
+            )
+            return None
         
         # Get word from database
         word = self.db.get_word_by_number(encoded_number)
         
-        # if word:
-        #     logger.info(f"Mapped number {encoded_number} to word: {word}")
-        # else:
-        #     logger.warning(f"No word found for number {encoded_number}")
+        if not word:
+            logger.warning(
+                f"No word found for number {encoded_number}. "
+                f"Database may need to be reinitialized."
+            )
         
         return word
     
