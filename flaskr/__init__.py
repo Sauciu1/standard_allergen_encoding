@@ -1,61 +1,43 @@
 import os
+import csv
 from flask import Flask, send_from_directory, jsonify, request
 from flask_cors import CORS
-
-
-# Allergen data
-ALLERGENS = [
-    {"id": "milk", "name": "Milk", "emoji": "🥛"},
-    {"id": "eggs", "name": "Eggs", "emoji": "🥚"},
-    {"id": "peanuts", "name": "Peanuts", "emoji": "🥜"},
-    {"id": "tree-nuts", "name": "Tree Nuts", "emoji": "🌰"},
-    {"id": "wheat", "name": "Wheat", "emoji": "🌾"},
-    {"id": "soy", "name": "Soy", "emoji": "🫘"},
-    {"id": "fish", "name": "Fish", "emoji": "🐟"},
-    {"id": "shellfish", "name": "Shellfish", "emoji": "🦐"},
-    {"id": "sesame", "name": "Sesame", "emoji": "🫘"},
-    {"id": "mustard", "name": "Mustard", "emoji": "🟡"},
-    {"id": "celery", "name": "Celery", "emoji": "🥬"},
-    {"id": "lupin", "name": "Lupin", "emoji": "🌸"},
-    {"id": "molluscs", "name": "Molluscs", "emoji": "🦪"},
-    {"id": "sulphites", "name": "Sulphites", "emoji": "🍷"},
-]
-
-WORD_POOL = [
-    "ocean", "maple", "thunder", "crystal", "velvet", "ember", "frost", "coral",
-    "meadow", "storm", "willow", "sage", "river", "breeze", "dawn", "dusk",
-    "summit", "valley", "canyon", "ridge", "harbor", "beacon", "anchor", "compass",
-    "cedar", "birch", "oak", "pine", "fern", "moss", "ivy", "bloom",
-]
+# from ..src.allergies_getter import AllergiesGetter
 
 # Store encoded codes for decoding (in production, use a database)
 code_storage = {}
 
+def load_allergens_from_csv(file_paths):
+    '''Load allergens from given CSV files and return a list of allergen dictionaries.'''
+    unique_allergens = set()
+    
+    for file_path in file_paths:
+        if not os.path.exists(file_path):
+            print(f"Warning: {file_path} not found.")
+            continue
+            
+        with open(file_path, mode='r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            next(reader)  # Skip the header row
+            for row in reader:
+                if len(row) >= 2:
+                    # row[1] is the 'allergen' column
+                    allergen_name = row[1].strip()
+                    if allergen_name:
+                        unique_allergens.add(allergen_name)
+    
+    return unique_allergens
 
-def encode_allergens(allergen_ids):
-    """Encode allergen IDs into a three-word code."""
-    if not allergen_ids:
-        return ""
+# Define paths to your files
+project_root = os.path.dirname(os.path.dirname(__file__))
 
-    sorted_ids = sorted(allergen_ids)
-    hash_string = "-".join(sorted_ids)
-    hash_num = 0
+csv_paths = [
+    os.path.join(project_root, 'data', 'allergens', 'main_allergens.csv'),
+    os.path.join(project_root, 'data', 'allergens', 'secondary_allergens.csv')
+]
 
-    for char in hash_string:
-        hash_num = ((hash_num << 5) - hash_num) + ord(char)
-        hash_num = hash_num & 0xFFFFFFFF  # Keep it 32-bit
-    hash_num = abs(hash_num)
-
-    word1 = WORD_POOL[hash_num % len(WORD_POOL)]
-    word2 = WORD_POOL[(hash_num * 7) % len(WORD_POOL)]
-    word3 = WORD_POOL[(hash_num * 13) % len(WORD_POOL)]
-
-    code = f"{word1}.{word2}.{word3}"
-
-    # Store for later decoding
-    code_storage[code] = sorted_ids
-
-    return code
+# Load the dynamic list
+ALLERGENS = load_allergens_from_csv(csv_paths)
 
 
 def decode_code(code):
@@ -130,7 +112,8 @@ def create_app(test_config=None):
     @app.route('/api/allergens', methods=['GET'])
     def get_allergens():
         """Get list of all allergens."""
-        return jsonify({"allergens": ALLERGENS})
+        # Convert set to sorted list for JSON serialization
+        return jsonify({"allergens": sorted(list(ALLERGENS))})
 
     @app.route('/api/encode', methods=['POST'])
     def api_encode():
@@ -141,10 +124,10 @@ def create_app(test_config=None):
         if not allergen_ids:
             return jsonify({"error": "No allergens provided"}), 400
 
-        code = encode_allergens(allergen_ids)
-
+        # TODO: Implement proper encoding
+        # For now, return a placeholder response
         return jsonify({
-            "code": code,
+            "code": "placeholder.code.here",
             "allergens": allergen_ids
         })
 
@@ -157,19 +140,11 @@ def create_app(test_config=None):
         if not code:
             return jsonify({"error": "No code provided"}), 400
 
-        allergen_ids = decode_code(code)
-
-        # Get full allergen info
-        allergens = []
-        for aid in allergen_ids:
-            allergen = next((a for a in ALLERGENS if a['id'] == aid), None)
-            if allergen:
-                allergens.append(allergen)
+        allergen_names = decode_code(code)
 
         return jsonify({
             "code": code,
-            "allergen_ids": allergen_ids,
-            "allergens": allergens
+            "allergens": allergen_names
         })
 
     @app.route('/api/health', methods=['GET'])
