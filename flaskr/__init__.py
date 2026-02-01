@@ -275,4 +275,87 @@ def create_app(test_config=None):
             "menu": HARDCODED_MENU
         })
     
+    @app.route('/api/combine-codes', methods=['POST'])
+    def api_combine_codes():
+        """
+        Combine multiple allergen codes into one group code.
+        
+        Expected JSON body:
+        {
+            "codes": ["word1 word2", "word3 word4", ...]
+        }
+        
+        Returns:
+        {
+            "success": true,
+            "combined_code": "combined code",
+            "combined_allergens": [...],
+            "individual_allergens": [
+                {"code": "...", "allergens": [...]},
+                ...
+            ]
+        }
+        """
+        try:
+            data = request.get_json()
+            codes = data.get('codes', [])
+
+            if not codes or not isinstance(codes, list):
+                return jsonify({"error": "No codes provided or invalid format"}), 400
+
+            with AllergiesGetter() as getter:
+                all_allergens_set = set()
+                individual_results = []
+                
+                # Decode each code and collect all allergens
+                for code in codes:
+                    words = code.strip().split()
+                    
+                    if not words:
+                        return jsonify({
+                            "error": f"Invalid code format: '{code}'"
+                        }), 400
+                    
+                    # Decode this code
+                    allergens = getter.words_to_allergies(words)
+                    
+                    if allergens is None:
+                        return jsonify({
+                            "error": f"Could not decode code: '{code}'. Invalid or unrecognized words."
+                        }), 400
+                    
+                    # Add to combined set
+                    all_allergens_set.update(allergens)
+                    
+                    individual_results.append({
+                        "code": code,
+                        "allergens": allergens
+                    })
+                
+                # Convert set to sorted list for consistent encoding
+                combined_allergens_list = sorted(list(all_allergens_set))
+                
+                # Encode the combined allergens
+                combined_words = getter.allergies_to_words(combined_allergens_list)
+                
+                if any(w is None for w in combined_words):
+                    return jsonify({
+                        "error": "Failed to encode combined allergens"
+                    }), 500
+                
+                combined_code = " ".join(combined_words)
+                
+                return jsonify({
+                    "success": True,
+                    "combined_code": combined_code,
+                    "combined_words": combined_words,
+                    "combined_allergens": combined_allergens_list,
+                    "individual_allergens": individual_results
+                })
+                
+        except Exception as e:
+            return jsonify({
+                "error": f"Server error: {str(e)}"
+            }), 500
+    
     return app
