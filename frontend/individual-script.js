@@ -35,6 +35,21 @@ const decodeBtn = document.getElementById('decodeBtn');
 const decodeResult = document.getElementById('decodeResult');
 const decodedAllergensList = document.getElementById('decodedAllergensList');
 
+// DOM Elements - QR Scanner
+const manualInputTab = document.getElementById('manualInputTab');
+const scanQrTab = document.getElementById('scanQrTab');
+const manualInputSection = document.getElementById('manualInputSection');
+const scanQrSection = document.getElementById('scanQrSection');
+const startScanBtn = document.getElementById('startScanBtn');
+const stopScanBtn = document.getElementById('stopScanBtn');
+const startScanContainer = document.getElementById('startScanContainer');
+const qrScannerContainer = document.getElementById('qrScannerContainer');
+const scannedCodeDisplay = document.getElementById('scannedCodeDisplay');
+const scannedCodeText = document.getElementById('scannedCodeText');
+
+// QR Scanner state
+let html5QrCode = null;
+
 // Tab Switching
 if (tabEncode && tabDecode && encodeSection && decodeSection) {
     tabEncode.addEventListener('click', () => {
@@ -437,6 +452,146 @@ function capitalizeFirst(str) {
 // Make functions globally available for onclick handlers
 window.toggleAllergen = toggleAllergen;
 window.toggleAllergenFromTag = toggleAllergen;
+
+// Decode Tab Switching (Manual Input vs Scan QR)
+if (manualInputTab && scanQrTab && manualInputSection && scanQrSection) {
+    manualInputTab.addEventListener('click', () => {
+        // Switch to manual input tab
+        manualInputTab.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+        manualInputTab.classList.remove('text-gray-500');
+        scanQrTab.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+        scanQrTab.classList.add('text-gray-500');
+
+        manualInputSection.classList.remove('hidden');
+        scanQrSection.classList.add('hidden');
+
+        // Stop scanner if running
+        stopQrScanner();
+    });
+
+    scanQrTab.addEventListener('click', () => {
+        // Switch to scan QR tab
+        scanQrTab.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+        scanQrTab.classList.remove('text-gray-500');
+        manualInputTab.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+        manualInputTab.classList.add('text-gray-500');
+
+        scanQrSection.classList.remove('hidden');
+        manualInputSection.classList.add('hidden');
+
+        lucide.createIcons();
+    });
+}
+
+// QR Scanner Functions
+async function startQrScanner() {
+    try {
+        if (!startScanContainer || !qrScannerContainer) return;
+
+        // Show scanner container, hide start button
+        startScanContainer.classList.add('hidden');
+        qrScannerContainer.classList.remove('hidden');
+
+        // Initialize scanner
+        html5QrCode = new Html5Qrcode("qrReader");
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+
+        await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            onQrCodeScanned,
+            (errorMessage) => {
+                // Scan error - ignored, keeps scanning
+            }
+        );
+
+        console.log('QR Scanner started');
+
+    } catch (err) {
+        console.error("Unable to start QR scanner:", err);
+        alert("Unable to access camera. Please ensure you have granted camera permissions.");
+        stopQrScanner();
+    }
+}
+
+async function stopQrScanner() {
+    try {
+        if (html5QrCode) {
+            await html5QrCode.stop();
+            html5QrCode.clear();
+            html5QrCode = null;
+        }
+    } catch (err) {
+        console.error("Error stopping scanner:", err);
+    }
+
+    // Reset UI
+    if (startScanContainer) startScanContainer.classList.remove('hidden');
+    if (qrScannerContainer) qrScannerContainer.classList.add('hidden');
+    if (scannedCodeDisplay) scannedCodeDisplay.classList.add('hidden');
+}
+
+async function onQrCodeScanned(decodedText) {
+    console.log('QR Code scanned:', decodedText);
+
+    // Display scanned code
+    if (scannedCodeText) scannedCodeText.textContent = decodedText;
+    if (scannedCodeDisplay) scannedCodeDisplay.classList.remove('hidden');
+
+    // Stop scanner
+    await stopQrScanner();
+
+    // Auto-decode after a short delay
+    setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/decode`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    code: decodedText
+                })
+            });
+
+            const data = await response.json();
+            console.log('Decode response:', data);
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'Failed to decode code');
+            }
+
+            // Display decoded allergens
+            if (decodedAllergensList) {
+                decodedAllergensList.innerHTML = data.allergens.map(allergen => `
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-medium">
+                        ${escapeHtml(capitalizeFirst(allergen))}
+                    </span>
+                `).join('');
+            }
+
+            if (decodeResult) decodeResult.classList.remove('hidden');
+
+        } catch (error) {
+            console.error('Error decoding scanned code:', error);
+            showError(error.message || 'Failed to decode code. Please try again.');
+        }
+    }, 500);
+}
+
+// QR Scanner button event listeners
+if (startScanBtn) {
+    startScanBtn.addEventListener('click', startQrScanner);
+}
+
+if (stopScanBtn) {
+    stopScanBtn.addEventListener('click', stopQrScanner);
+}
 
 // Initialize on page load
 window.addEventListener('load', () => {
