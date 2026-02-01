@@ -50,7 +50,7 @@ function decodeWords(code) {
 
     // Mock decoding - in production this would use a proper lookup
     const mockResults = {
-        "ocean.maple.thunder": ["milk", "peanuts", "shellfish"],
+        "too harry dumb": ["milk", "peanuts", "shellfish"],
         "crystal.velvet.ember": ["eggs", "wheat", "soy"],
         "meadow.storm.willow": ["fish", "tree-nuts"],
         "river.breeze.dawn": ["sesame", "mustard"],

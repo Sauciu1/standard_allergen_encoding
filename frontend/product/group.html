@@ -17,7 +17,7 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
-                <a href="individual.html"
+                <a href="../index.html"
                     class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-green-700 transition-colors">
                     <img src="../assets/Logo.png" alt="Allergy Ally Shield Logo" width="24" height="24"
                         style="color: #28703B;">
@@ -26,54 +26,11 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center justify-center flex-1 gap-8">
-                    <!-- Products Dropdown -->
-                    <div class="relative group">
-                        <button class="flex items-center gap-1 text-green-700 font-medium transition-colors">
-                            Products
-                            <i data-lucide="chevron-down"
-                                class="h-4 w-4 transition-transform group-hover:rotate-180"></i>
-                        </button>
-                        <div
-                            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                            <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 w-56">
-                                <a href="individual.html"
-                                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
-                                        <i data-lucide="shield" class="h-4 w-4 text-blue-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">Individual</p>
-                                        <p class="text-xs text-gray-500">Personal allergen code</p>
-                                    </div>
-                                </a>
-                                <a href="group.html"
-                                    class="flex items-center gap-3 px-4 py-3 bg-purple-50 transition-colors">
-                                    <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
-                                        <i data-lucide="users" class="h-4 w-4 text-purple-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-purple-600">Group</p>
-                                        <p class="text-xs text-gray-500">Combine multiple codes</p>
-                                    </div>
-                                </a>
-                                <a href="menu.html"
-                                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
-                                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                                        <i data-lucide="file-text" class="h-4 w-4 text-green-600"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-medium text-gray-900">Menu Scanner</p>
-                                        <p class="text-xs text-gray-500">Check menu safety</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <a href="../index.html#how-it-works"
-                        class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
-                    <a href="../index.html#about-us"
-                        class="text-gray-600 hover:text-gray-900 font-medium transition-colors">About Us</a>
+                    <a href="individual.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Individual</a>
+                    <a href="group.html" class="font-medium transition-colors" style="color: #28703B;">Group</a>
+                    <a href="menu.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Menu</a>
+                    <a href="../index.html#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                    <a href="../index.html#about-us" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">About Us</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -86,25 +43,11 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
             <div class="container mx-auto px-4 py-4 space-y-2">
-                <div class="px-4 py-2 text-sm font-semibold text-green-700 uppercase">Products</div>
-                <a href="individual.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-50">
-                    <i data-lucide="shield" class="h-5 w-5 text-blue-600"></i>
-                    <span class="font-medium text-gray-900">Individual</span>
-                </a>
-                <a href="group.html" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-purple-50">
-                    <i data-lucide="users" class="h-5 w-5 text-purple-600"></i>
-                    <span class="font-medium text-purple-600">Group</span>
-                </a>
-                <a href="menu.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-50">
-                    <i data-lucide="file-text" class="h-5 w-5 text-green-600"></i>
-                    <span class="font-medium text-gray-900">Menu Scanner</span>
-                </a>
-                <div class="pt-2 border-t border-gray-100 space-y-2">
-                    <a href="../index.html#how-it-works"
-                        class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">How It Works</a>
-                    <a href="../index.html#about-us"
-                        class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">About Us</a>
-                </div>
+                <a href="individual.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Individual</a>
+                <a href="group.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium" style="color: #28703B;">Group</a>
+                <a href="menu.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Menu</a>
+                <a href="../index.html#how-it-works" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">How It Works</a>
+                <a href="../index.html#about-us" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">About Us</a>
             </div>
         </div>
     </nav>
@@ -137,7 +80,7 @@
                 <div class="grid md:grid-cols-2 gap-4 mb-4">
                     <input type="text" id="inputName" placeholder="Name (e.g., Sarah)"
                         class="px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <input type="text" id="inputCode" placeholder="Allergen code (e.g., ocean.maple.thunder)"
+                    <input type="text" id="inputCode" placeholder="Allergen code (e.g., too harry dumb)"
                         class="px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
                 <button id="addMemberBtn" disabled

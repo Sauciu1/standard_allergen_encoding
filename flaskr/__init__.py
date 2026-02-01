@@ -51,7 +51,7 @@ def decode_code(code):
 
     # Fallback mock results for demo
     mock_results = {
-        "ocean.maple.thunder": ["milk", "peanuts", "shellfish"],
+        "too harry dumb": ["milk", "peanuts", "shellfish"],
         "crystal.velvet.ember": ["eggs", "wheat", "soy"],
         "meadow.storm.willow": ["fish", "tree-nuts"],
         "river.breeze.dawn": ["sesame", "mustard"],
