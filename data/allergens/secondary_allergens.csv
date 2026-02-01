@@ -1,84 +1,84 @@
-id,allergen,group,group_id,aliases,notes
-0,Almond,nuts and seeds,1,,
-1,Brazil nut,nuts and seeds,1,,
-2,Cashew,nuts and seeds,1,,
-3,Chestnut,nuts and seeds,1,,
-4,Cocoa,nuts and seeds,1,,made from the seed of the cacao tree
-5,Coconut,nuts and seeds,1,,botanically a fruit
-6,Cotton seed,nuts and seeds,1,,
-7,Flax seed,nuts and seeds,1,linseed,
-8,Hazelnut,nuts and seeds,1,,
-9,Mustard,nuts and seeds,1,,botanically a seed
-10,Peanut,cereals, grains and legumes,2,ground nuts; monkey nuts,botanically a legume
-11,Pecan,nuts and seeds,1,,
-12,Pine nut,nuts and seeds,1,,
-13,Poppy seed,nuts and seeds,1,,botanically a seed
-14,Sesame,nuts and seeds,1,,botanically a seed
-15,Sunflower seed,other,7,,botanically a fruit
-16,Walnut,other,7,,
+id,allergen,group_id
+0,almond,0
+1,brazil nut,0
+2,cashew,0
+3,chestnut,0
+4,cocoa,0
+5,coconut,0
+6,cotton seed,0
+7,flax seed,0
+8,hazelnut,0
+9,mustard,0
+10,peanut,0
+11,pecan,0
+12,pine nut,0
+13,poppy seed,0
 
-17,Barley,cereals, grains and legumes,2,,
-18,Buckwheat,cereals, grains and legumes,2,,
-19,Maize,cereals, grains and legumes,2,corn,botanically a grain
-20,Oat,cereals, grains and legumes,2,,
-21,Rice,cereals, grains and legumes,2,,
-22,Rye,cereals, grains and legumes,2,,
-23,Wheat,cereals, grains and legumes,2,breadmaking wheat; pasta wheat; Kamut; spelt,
+14,sesame,1
+15,sunflower seed,1
+16,walnut,1
+17,barley,1
+18,buckwheat,1
+19,maize,1
+20,oat,1
+21,rice,1
+22,rye,1
+23,wheat,1
+24,castor bean,1
+25,chickpea,1
+26,lentil,1
+27,lupin,1
 
-24,Castor bean,cereals, grains and legumes,2,,
-25,Chickpea,cereals, grains and legumes,2,garbanzo; bengal gram,
-26,Lentil,cereals, grains and legumes,2,,
-27,Lupin,cereals, grains and legumes,2,lupine,
-28,Soybean,cereals, grains and legumes,2,soya,
+28,soybean,2
+29,acerola,2
+30,apple,2
+31,apricot,2
+32,avocado,2
+33,banana,2
+34,bell pepper,2
+35,cherry,2
+36,courgette,2
+37,date,2
+38,fig,2
+39,grape,2
+40,kiwi fruit,2
+41,lychee,2
 
-29,Acerola,fruits (tropical & soft),4,Barbados cherry,
-30,Apple,fruits (tree & vine),3,,
-31,Apricot,fruits (tree & vine),3,,
-32,Avocado,vegetables and herbs,5,,botanically a fruit
-33,Banana,fruits (tropical & soft),4,,
-34,Bell pepper,vegetables and herbs,5,,botanically a fruit
-35,Cherry,fruits (tree & vine),3,,
-36,Courgette,vegetables and herbs,5,zucchini,botanically a fruit
-37,Date,fruits (tropical & soft),4,,
-38,Fig,fruits (tree & vine),3,,
-39,Grape,fruits (tree & vine),3,,
-40,Kiwi fruit,fruits (tree & vine),3,Chinese gooseberry,
-41,Lychee,fruits (tropical & soft),4,,
-42,Mango,fruits (tropical & soft),4,,
-43,Melon,fruits (tropical & soft),4,,
-44,Peach,fruits (tree & vine),3,,
-45,Pear,fruits (tree & vine),3,,
-46,Persimmon,fruits (tropical & soft),4,,
-47,Pineapple,fruits (tropical & soft),4,,
-48,Plum,fruits (tree & vine),3,garden plum,
-49,Pomegranate,fruits (tree & vine),3,,
-50,Pumpkin,vegetables and herbs,5,,botanically a fruit
-51,Strawberry,fruits (tropical & soft),4,,
-52,Tomato,vegetables and herbs,5,,botanically a fruit
+42,mango,3
+43,melon,3
+44,peach,3
+45,pear,3
+46,persimmon,3
+47,pineapple,3
+48,plum,3
+49,pomegranate,3
+50,pumpkin,3
+51,strawberry,3
+52,tomato,3
+53,cabbage,3
+54,carrot,3
+55,celery,3
 
-53,Cabbage,vegetables and herbs,5,,
-54,Carrot,vegetables and herbs,5,,
-55,Celery,vegetables and herbs,5,celeriac,
-56,Garlic,vegetables and herbs,5,,
-57,Lettuce,vegetables and herbs,5,,
-58,Potato,vegetables and herbs,5,,
-59,Turnip,vegetables and herbs,5,,
-60,Aniseed,vegetables and herbs,5,,
-61,Camomile,vegetables and herbs,5,,
+56,garlic,4
+57,lettuce,4
+58,potato,4
+59,turnip,4
+60,aniseed,4
+61,camomile,4
+62,abalone,4
+63,crab,4
+64,lobster,4
+65,oyster,4
+66,shrimp,4
+67,snail,4
+68,squid,4
+69,alaska pollock,4
 
-62,Abalone,animals,6,perlemoen,
-63,Crab,animals,6,,
-64,Lobster,animals,6,,
-65,Oyster,animals,6,,
-66,Shrimp,animals,6,black tiger shrimp; brown shrimp; greasyback shrimp; Indian prawn; Neptune rose shrimp; white shrimp,
-67,Snail,animals,6,,
-68,Squid,animals,6,,
-69,Alaska pollock,animals,6,,
-70,Carp,animals,6,,
-71,Cod,animals,6,,
-72,Frog,animals,6,edible,
-73,Mackerel,animals,6,,
-74,Salmon,animals,6,,
-75,Tuna,animals,6,,
-76,Egg,other,7,hen's egg,
-77,Milk,other,7,cow's milk,
+70,carp,5
+71,cod,5
+72,frog,5
+73,mackerel,5
+74,salmon,5
+75,tuna,5
+76,eggs,5
+77,milk,5
