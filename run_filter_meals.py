@@ -1,24 +1,72 @@
 import json
 import re
+import sys
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+
+# Add src to path to import AllergiesGetter
+sys.path.insert(0, str(Path(__file__).parent / "src"))
+from allergies_getter import AllergiesGetter
 
 
 def normalise_words(csv: str) -> List[str]:
     return [w.strip().lower() for w in csv.split(",") if w.strip()]
 
 
-def prompt_for_allergies() -> List[str]:
+def decode_allergen_phrases(phrases: List[str]) -> List[str]:
     """
-    Prompts user to type allergies/blocked words.
-    Example input: milk, nuts, sesame
+    Decode allergen phrases into actual allergen names.
+
+    Args:
+        phrases: List of encoded allergen phrases/words
+
+    Returns:
+        List of decoded allergen names (lowercased for matching)
     """
-    print("\nEnter allergy words to block (comma-separated).")
-    print("Example: milk, nuts, sesame")
-    raw = input("Allergies/blocked words: ").strip()
-    while not raw:
-        raw = input("Please enter at least one word: ").strip()
-    return normalise_words(raw)
+    try:
+        with AllergiesGetter() as getter:
+            # Use words_to_allergies to decode the database words into allergen names
+            allergens = getter.words_to_allergies(phrases)
+            if allergens is None:
+                print(f"Warning: Could not decode phrases: {phrases}")
+                return []
+            
+            # Print the decoded allergens
+            print(f"Decoded allergens: {allergens}")
+            
+            # Now we have the allergen names, we need to expand them to include
+            # all their ingredients/related terms for matching in menu text
+            all_blocked_terms = set()
+            
+            # For each decoded allergen, add the allergen name itself (lowercased)
+            for allergen in allergens:
+                allergen_lower = allergen.lower()
+                all_blocked_terms.add(allergen_lower)
+                
+                # Also add common variations/ingredients
+                # You might want to expand this based on your allergen definitions
+                # allergen_mapping = {
+                #     'peanuts': ['peanut', 'peanuts', 'groundnut'],
+                #     'tree nuts': ['almond', 'cashew', 'walnut', 'pecan', 'pistachio', 'hazelnut', 'macadamia', 'pine nut'],
+                #     'milk': ['milk', 'dairy', 'cream', 'cheese', 'butter', 'yogurt', 'lactose'],
+                #     'eggs': ['egg', 'eggs', 'mayonnaise'],
+                #     'fish': ['fish', 'salmon', 'tuna', 'cod', 'haddock', 'anchovy'],
+                #     'shellfish': ['shellfish', 'shrimp', 'crab', 'lobster', 'prawn', 'crayfish'],
+                #     'soy': ['soy', 'soya', 'tofu', 'edamame'],
+                #     'wheat': ['wheat', 'flour', 'bread', 'pasta'],
+                #     'sesame': ['sesame', 'tahini'],
+                # }
+                
+                # Check if this allergen has a mapping
+                # for key, terms in allergen_mapping.items():
+                #     if key in allergen_lower:
+                #         all_blocked_terms.update(terms)
+            
+            print(f"Expanded to blocked terms: {sorted(all_blocked_terms)}")
+            return list(all_blocked_terms)
+    except Exception as e:
+        print(f"Error decoding allergen phrases: {e}")
+        return []
 
 
 def split_into_meals(ocr_text: str) -> List[str]:
@@ -74,18 +122,48 @@ def analyse_meals(meals: List[str], blocked_words: List[str]) -> List[Dict[str, 
     return results
 
 
-def main():
+def filter_meals(allergen_phrases: Optional[List[str]] = None, outputs_dir: str = "outputs") -> Dict[str, Any]:
+    """
+    Filter meals from OCR text files based on allergen phrases.
+    
+    Args:
+        allergen_phrases: List of encoded allergen phrases to decode and use for filtering.
+                         If None, will use interactive mode.
+        outputs_dir: Directory containing OCR output text files (default: "outputs")
+    
+    Returns:
+        Dictionary containing:
+            - "all_results": List of results for each text file
+            - "output_path": Path to the JSON results file
+            - "blocked_words": List of allergens that were blocked
+    """
+    # Decode allergen phrases or use interactive mode
+    if allergen_phrases:
+        print(f"\nDecoding allergen phrases: {allergen_phrases}")
+        blocked_words = decode_allergen_phrases(allergen_phrases)
+        
+        if not blocked_words:
+            raise ValueError("Could not decode any allergens from provided phrases.")
+        
+        print(f"Decoded allergens to block: {blocked_words}")
+    else:
+        # Interactive mode - prompt user
+        print("\nEnter allergy words to block (comma-separated).")
+        print("Example: milk, nuts, sesame")
+        raw = input("Allergies/blocked words: ").strip()
+        while not raw:
+            raw = input("Please enter at least one word: ").strip()
+        blocked_words = normalise_words(raw)
+
     # Where OCR text files are saved by your OCR script
-    outputs_dir = Path("outputs")
+    outputs_path = Path(outputs_dir)
 
-    if not outputs_dir.exists() or not outputs_dir.is_dir():
-        raise SystemExit("Missing ./outputs folder. Run OCR first: uv run python -u run_ocr_folder.py")
+    if not outputs_path.exists() or not outputs_path.is_dir():
+        raise FileNotFoundError(f"Missing {outputs_dir} folder. Run OCR first: uv run python -u run_ocr_folder.py")
 
-    txt_files = sorted(outputs_dir.glob("*.txt"))
+    txt_files = sorted(outputs_path.glob("*.txt"))
     if not txt_files:
-        raise SystemExit("No .txt files found in ./outputs. Run OCR first: uv run python -u run_ocr_folder.py")
-
-    blocked_words = prompt_for_allergies()
+        raise FileNotFoundError(f"No .txt files found in {outputs_dir}. Run OCR first: uv run python -u run_ocr_folder.py")
 
     all_results = []
 
@@ -110,9 +188,21 @@ def main():
             mark = "❌" if not r["allowed"] else "✅"
             print(f"{mark} {r['meal']}  -> {r['status']} ({r['reason']})")
 
-    out_path = outputs_dir / "filtered_results.json"
+    out_path = outputs_path / "filtered_results.json"
     out_path.write_text(json.dumps(all_results, indent=2), encoding="utf-8")
     print(f"\n✅ Wrote full JSON results to: {out_path.resolve()}")
+    
+    return {
+        "all_results": all_results,
+        "output_path": str(out_path.resolve()),
+        "blocked_words": blocked_words
+    }
+
+
+def main():
+    """Command-line entry point - uses interactive mode."""
+    filter_list = ["too", "harry", "dumb"]
+    filter_meals(allergen_phrases=filter_list)
 
 
 if __name__ == "__main__":
