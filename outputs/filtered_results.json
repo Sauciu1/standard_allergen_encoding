@@ -1,0 +1,296 @@
+[
+  {
+    "source_text_file": "PHOTO-2026-01-31-18-56-12 (1).txt",
+    "blocked_words": [
+      "milk",
+      "nuts",
+      "beets"
+    ],
+    "results": [
+      {
+        "meal": "\u00bb Tens REM es | Te f |",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "\u2014 Key fers|hY x",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "> AG",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Dishes contain these allergens:",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "] Cereals containing gluten",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Crustaceans (e.g. prawns, crabs, lobster, crayfish)",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "3 Eggs",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "4 Fish",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "5 Peanuts",
+        "allowed": false,
+        "status": "NOT ALLOWED",
+        "matched_words": [
+          "nuts"
+        ],
+        "reason": "Contains: nuts"
+      },
+      {
+        "meal": "G Soybeans",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "7F Milk",
+        "allowed": false,
+        "status": "NOT ALLOWED",
+        "matched_words": [
+          "milk"
+        ],
+        "reason": "Contains: milk"
+      },
+      {
+        "meal": "& Nuts (namely almonds, hazelnuts, walnuts, cashews, pecan nuts,Brazil nuts, pistachio nuts, macadamia (or",
+        "allowed": false,
+        "status": "NOT ALLOWED",
+        "matched_words": [
+          "nuts"
+        ],
+        "reason": "Contains: nuts"
+      },
+      {
+        "meal": "Queensland) nuts)",
+        "allowed": false,
+        "status": "NOT ALLOWED",
+        "matched_words": [
+          "nuts"
+        ],
+        "reason": "Contains: nuts"
+      },
+      {
+        "meal": "9 Celery (including celeriac)",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "10 Mustard",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "11 sesame",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "12 sulphur dioxide",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "13 Lupin",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "14 Molluscs (e.g clams, mussels, whelks, oysters, snails and squid)",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "15 Traces of all allergens may be present rl",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "\u2014 ai ns fa 1. aes",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      }
+    ]
+  },
+  {
+    "source_text_file": "PHOTO-2026-01-31-18-56-12.txt",
+    "blocked_words": [
+      "milk",
+      "nuts",
+      "beets"
+    ],
+    "results": [
+      {
+        "meal": "~ SY \u2014 as Cy",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": ". Yah ThaiAngle Qe :",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "SAY 3.1 Pas Cer",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Son eo Os) ae",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "\u20182",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "(i",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Dinner Menu",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "IN",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Green Curry with (>) ) ~~) O",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Chicken",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "1 3 6",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Red Curry with ic C9) oo \u00a9) a",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Chickpeas (VE)",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "4 6 10 12 13 penang Curry with ~~",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "Beet 2",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "; 6 5. ES",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      },
+      {
+        "meal": "5 Vs o mi",
+        "allowed": true,
+        "status": "CHECK",
+        "matched_words": [],
+        "reason": "No blocked words found in the menu text (still confirm with staff)."
+      }
+    ]
+  }
+]
