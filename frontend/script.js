@@ -31,6 +31,7 @@ const WORD_POOL = [
 
 // State
 let selectedAllergens = [];
+let isDropdownOpen = false;
 
 // ==========================================
 // 2. ENCODING/DECODING FUNCTIONS
@@ -82,11 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Only run if we're on the individual page
-    const gridContainer = document.getElementById('allergenGrid');
-    if (!gridContainer) return;
+    const dropdownBtn = document.getElementById('dropdownBtn');
+    if (!dropdownBtn) return;
 
-    // Render allergen grid
-    renderAllergenGrid();
+    // Render allergen options in dropdown
+    renderAllergenOptions();
+
+    // Setup dropdown functionality
+    setupDropdown();
 
     // Setup tab switching
     setupTabs();
@@ -99,43 +103,189 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// 4. RENDER FUNCTIONS
+// 4. DROPDOWN FUNCTIONS
 // ==========================================
 
-function renderAllergenGrid() {
-    const gridContainer = document.getElementById('allergenGrid');
-    if (!gridContainer) return;
+function renderAllergenOptions() {
+    const optionsContainer = document.getElementById('allergenOptions');
+    if (!optionsContainer) return;
 
     ALLERGENS.forEach(allergen => {
-        const btn = document.createElement('button');
-        btn.className = "allergen-btn p-4 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 transition-all text-left";
-        btn.dataset.id = allergen.id;
-        btn.innerHTML = `
-            <span class="text-2xl mb-2 block">${allergen.emoji}</span>
+        const option = document.createElement('label');
+        option.className = "allergen-option flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors";
+        option.dataset.id = allergen.id;
+        option.dataset.name = allergen.name.toLowerCase();
+        option.innerHTML = `
+            <input type="checkbox" class="allergen-checkbox w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-id="${allergen.id}">
+            <span class="text-xl">${allergen.emoji}</span>
             <span class="text-sm font-medium text-gray-900">${allergen.name}</span>
         `;
+        optionsContainer.appendChild(option);
+    });
 
-        btn.addEventListener('click', () => toggleAllergen(allergen.id, btn));
-        gridContainer.appendChild(btn);
+    // Add checkbox change listeners
+    document.querySelectorAll('.allergen-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const id = e.target.dataset.id;
+            if (e.target.checked) {
+                if (!selectedAllergens.includes(id)) {
+                    selectedAllergens.push(id);
+                }
+            } else {
+                selectedAllergens = selectedAllergens.filter(a => a !== id);
+            }
+            updateSelectedDisplay();
+            updateButtonStates();
+        });
     });
 }
 
-// ==========================================
-// 5. EVENT HANDLERS
-// ==========================================
+function setupDropdown() {
+    const dropdownBtn = document.getElementById('dropdownBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+    const searchInput = document.getElementById('allergenSearch');
 
-function toggleAllergen(id, btnElement) {
-    const index = selectedAllergens.indexOf(id);
-    if (index > -1) {
-        selectedAllergens.splice(index, 1);
-        btnElement.classList.remove('selected');
+    // Toggle dropdown on button click
+    dropdownBtn.addEventListener('click', () => {
+        isDropdownOpen = !isDropdownOpen;
+        dropdownMenu.classList.toggle('hidden', !isDropdownOpen);
+        dropdownArrow.classList.toggle('rotate-180', isDropdownOpen);
+
+        if (isDropdownOpen && searchInput) {
+            searchInput.focus();
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('allergenDropdown');
+        if (!dropdown.contains(e.target) && isDropdownOpen) {
+            isDropdownOpen = false;
+            dropdownMenu.classList.add('hidden');
+            dropdownArrow.classList.remove('rotate-180');
+        }
+    });
+
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.allergen-option').forEach(option => {
+                const name = option.dataset.name;
+                if (name.includes(searchTerm)) {
+                    option.classList.remove('hidden');
+                } else {
+                    option.classList.add('hidden');
+                }
+            });
+        });
+    }
+}
+
+function updateSelectedDisplay() {
+    const tagsContainer = document.getElementById('selectedTagsContainer');
+    const placeholder = document.getElementById('dropdownPlaceholder');
+    const countDisplay = document.getElementById('allergenCount');
+
+    // Update count
+    const count = selectedAllergens.length;
+    countDisplay.textContent = `${count} selected`;
+
+    // Update count badge color
+    if (count > 0) {
+        countDisplay.classList.remove('bg-blue-100', 'text-blue-700');
+        countDisplay.classList.add('bg-blue-600', 'text-white');
     } else {
-        selectedAllergens.push(id);
-        btnElement.classList.add('selected');
+        countDisplay.classList.remove('bg-blue-600', 'text-white');
+        countDisplay.classList.add('bg-blue-100', 'text-blue-700');
     }
 
-    updateButtonStates();
+    // Update placeholder
+    if (count > 0) {
+        placeholder.textContent = `${count} allergen${count > 1 ? 's' : ''} selected`;
+        placeholder.classList.remove('text-gray-500');
+        placeholder.classList.add('text-gray-900');
+    } else {
+        placeholder.textContent = 'Click to select allergens...';
+        placeholder.classList.remove('text-gray-900');
+        placeholder.classList.add('text-gray-500');
+    }
+
+    // Update tags display
+    tagsContainer.innerHTML = '';
+    if (count > 0) {
+        tagsContainer.classList.remove('hidden');
+        tagsContainer.classList.add('flex');
+
+        selectedAllergens.forEach(id => {
+            const allergen = ALLERGENS.find(a => a.id === id);
+            if (allergen) {
+                const tag = document.createElement('span');
+                tag.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium";
+                tag.innerHTML = `
+                    <span>${allergen.emoji}</span>
+                    <span>${allergen.name}</span>
+                    <button type="button" class="remove-tag ml-1 hover:text-blue-900" data-id="${id}">
+                        <i data-lucide="x" class="h-3 w-3"></i>
+                    </button>
+                `;
+                tagsContainer.appendChild(tag);
+            }
+        });
+
+        // Add remove tag listeners
+        document.querySelectorAll('.remove-tag').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = btn.dataset.id;
+                selectedAllergens = selectedAllergens.filter(a => a !== id);
+
+                // Uncheck the checkbox
+                const checkbox = document.querySelector(`.allergen-checkbox[data-id="${id}"]`);
+                if (checkbox) checkbox.checked = false;
+
+                updateSelectedDisplay();
+                updateButtonStates();
+            });
+        });
+
+        // Refresh icons for the X buttons
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } else {
+        tagsContainer.classList.add('hidden');
+        tagsContainer.classList.remove('flex');
+    }
 }
+
+// ==========================================
+// 5. QR CODE GENERATION
+// ==========================================
+
+function generateQRCode(code) {
+    const canvas = document.getElementById('qrCodeCanvas');
+    if (!canvas) return;
+
+    // Check if QRCode library is loaded
+    if (typeof QRCode !== 'undefined') {
+        QRCode.toCanvas(canvas, code, {
+            width: 180,
+            margin: 2,
+            color: {
+                dark: '#1f2937',  // gray-800
+                light: '#ffffff'
+            }
+        }, function(error) {
+            if (error) console.error('QR Code generation error:', error);
+        });
+    } else {
+        console.warn('QRCode library not loaded');
+    }
+}
+
+// ==========================================
+// 6. EVENT HANDLERS
+// ==========================================
 
 function updateButtonStates() {
     const generateBtn = document.getElementById('generateBtn');
@@ -185,6 +335,7 @@ function setupEncode() {
     const generateBtn = document.getElementById('generateBtn');
     const resetBtn = document.getElementById('resetBtn');
     const copyBtn = document.getElementById('copyBtn');
+    const downloadQrBtn = document.getElementById('downloadQrBtn');
 
     if (generateBtn) {
         generateBtn.addEventListener('click', () => {
@@ -194,8 +345,22 @@ function setupEncode() {
             const codeText = document.getElementById('generatedCodeText');
             codeText.innerHTML = `${words[0]}.<span class="text-blue-600">${words[1]}</span>.${words[2]}`;
 
+            // Generate QR Code
+            generateQRCode(code);
+
             document.getElementById('encodeResult').classList.remove('hidden');
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+    }
+
+    // Download QR Code
+    if (downloadQrBtn) {
+        downloadQrBtn.addEventListener('click', () => {
+            const canvas = document.getElementById('qrCodeCanvas');
+            const link = document.createElement('a');
+            link.download = 'allergen-code-qr.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         });
     }
 
@@ -203,12 +368,22 @@ function setupEncode() {
         resetBtn.addEventListener('click', () => {
             selectedAllergens = [];
 
-            // Reset all allergen buttons
-            document.querySelectorAll('.allergen-btn').forEach(btn => {
-                btn.classList.remove('selected');
+            // Uncheck all checkboxes
+            document.querySelectorAll('.allergen-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            // Clear search
+            const searchInput = document.getElementById('allergenSearch');
+            if (searchInput) searchInput.value = '';
+
+            // Show all options
+            document.querySelectorAll('.allergen-option').forEach(option => {
+                option.classList.remove('hidden');
             });
 
             document.getElementById('encodeResult').classList.add('hidden');
+            updateSelectedDisplay();
             updateButtonStates();
         });
     }
@@ -220,11 +395,11 @@ function setupEncode() {
 
             const originalHTML = this.innerHTML;
             this.innerHTML = `<i data-lucide="check" class="mr-2 h-4 w-4"></i> Copied!`;
-            lucide.createIcons();
+            if (typeof lucide !== 'undefined') lucide.createIcons();
 
             setTimeout(() => {
                 this.innerHTML = originalHTML;
-                lucide.createIcons();
+                if (typeof lucide !== 'undefined') lucide.createIcons();
             }, 2000);
         });
     }

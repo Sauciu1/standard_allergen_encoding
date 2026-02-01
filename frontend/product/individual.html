@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Individual Code - Allergen Encoder</title>
+    <title>Individual Code - Standardised Allergen Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
 </head>
+
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 
     <!-- Navigation Bar -->
@@ -15,24 +17,27 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <!-- Logo -->
-                <a href="../index.html" class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-blue-600 transition-colors">
-                    <i data-lucide="shield-check" class="h-6 w-6 text-blue-600"></i>
-                    AllergenCode
+                <a href="individual.html"
+                    class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-blue-600 transition-colors">
+                    <img src="../assets/Logo.png" alt="Allergy Ally Shield Logo" width="24" height="24"
+                        style="color: #28703B;">
+                    AllergyAlly
                 </a>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="../index.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Home</a>
-
                     <!-- Products Dropdown -->
                     <div class="relative group">
                         <button class="flex items-center gap-1 text-blue-600 font-medium transition-colors">
                             Products
-                            <i data-lucide="chevron-down" class="h-4 w-4 transition-transform group-hover:rotate-180"></i>
+                            <i data-lucide="chevron-down"
+                                class="h-4 w-4 transition-transform group-hover:rotate-180"></i>
                         </button>
-                        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <div
+                            class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                             <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 w-56">
-                                <a href="individual.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 transition-colors">
+                                <a href="individual.html"
+                                    class="flex items-center gap-3 px-4 py-3 bg-blue-50 transition-colors">
                                     <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
                                         <i data-lucide="shield" class="h-4 w-4 text-blue-600"></i>
                                     </div>
@@ -41,7 +46,8 @@
                                         <p class="text-xs text-gray-500">Personal allergen code</p>
                                     </div>
                                 </a>
-                                <a href="group.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                                <a href="group.html"
+                                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
                                     <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
                                         <i data-lucide="users" class="h-4 w-4 text-purple-600"></i>
                                     </div>
@@ -50,7 +56,8 @@
                                         <p class="text-xs text-gray-500">Combine multiple codes</p>
                                     </div>
                                 </a>
-                                <a href="menu.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                                <a href="menu.html"
+                                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
                                     <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
                                         <i data-lucide="file-text" class="h-4 w-4 text-green-600"></i>
                                     </div>
@@ -63,12 +70,16 @@
                         </div>
                     </div>
 
-                    <a href="../index.html#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                    <a href="../index.html#how-it-works"
+                        class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                    <a href="../index.html#about-us"
+                        class="text-gray-600 hover:text-gray-900 font-medium transition-colors">About Us</a>
                 </div>
 
                 <!-- CTA Button -->
                 <div class="hidden md:block">
-                    <a href="individual.html" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
+                    <a href="individual.html"
+                        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
                         Get Started
                     </a>
                 </div>
@@ -83,7 +94,6 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
             <div class="container mx-auto px-4 py-4 space-y-2">
-                <a href="../index.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">Home</a>
                 <div class="px-4 py-2 text-sm font-semibold text-gray-500 uppercase">Products</div>
                 <a href="individual.html" class="flex items-center gap-3 px-4 py-2 rounded-lg bg-blue-50">
                     <i data-lucide="shield" class="h-5 w-5 text-blue-600"></i>
@@ -97,6 +107,18 @@
                     <i data-lucide="file-text" class="h-5 w-5 text-green-600"></i>
                     <span class="font-medium text-gray-900">Menu Scanner</span>
                 </a>
+                <div class="pt-2 border-t border-gray-100 space-y-2">
+                    <a href="../index.html#how-it-works"
+                        class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">How It Works</a>
+                    <a href="../index.html#about-us"
+                        class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">About Us</a>
+                </div>
+                <div class="pt-2 border-t border-gray-100">
+                    <a href="individual.html"
+                        class="block w-full text-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                        Get Started
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -110,7 +132,8 @@
 
             <!-- Header -->
             <div class="text-center mb-12">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-6 shadow-lg">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-6 shadow-lg">
                     <i data-lucide="shield" class="h-8 w-8 text-white"></i>
                 </div>
                 <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -124,10 +147,12 @@
             <!-- Tab Switcher -->
             <div class="flex justify-center mb-12">
                 <div class="inline-flex items-center p-1 rounded-xl bg-gray-200">
-                    <button id="tabEncode" class="px-6 py-3 rounded-lg font-medium transition-all bg-white shadow-sm text-gray-900">
+                    <button id="tabEncode"
+                        class="px-6 py-3 rounded-lg font-medium transition-all bg-white shadow-sm text-gray-900">
                         Encode
                     </button>
-                    <button id="tabDecode" class="px-6 py-3 rounded-lg font-medium transition-all text-gray-500 hover:text-gray-900 flex items-center gap-2">
+                    <button id="tabDecode"
+                        class="px-6 py-3 rounded-lg font-medium transition-all text-gray-500 hover:text-gray-900 flex items-center gap-2">
                         <i data-lucide="arrow-left-right" class="h-4 w-4"></i>
                         Decode
                     </button>
@@ -137,32 +162,88 @@
             <!-- Encode Section -->
             <div id="encodeSection" class="space-y-8">
                 <div class="p-8 rounded-2xl gradient-card shadow-lg bg-white">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Select Your Allergens</h2>
-                    <div id="allergenGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        <!-- Allergen buttons will be generated by JavaScript -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-900">Select Your Allergens</h2>
+                        <span id="allergenCount"
+                            class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
+                            0 selected
+                        </span>
                     </div>
-                </div>
 
-                <div class="flex justify-center gap-4">
-                    <button id="generateBtn" disabled class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
-                        Generate Code
-                        <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
-                    </button>
-                    <button id="resetBtn" class="hidden inline-flex items-center justify-center rounded-lg border-2 border-gray-200 bg-white px-8 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                        <i data-lucide="refresh-cw" class="mr-2 h-5 w-5"></i>
-                        Reset
-                    </button>
+                    <!-- Dropdown Multiselect -->
+                    <div class="relative" id="allergenDropdown">
+                        <!-- Dropdown Trigger -->
+                        <button type="button" id="dropdownBtn"
+                            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-left flex items-center justify-between hover:border-blue-300 focus:outline-none focus:border-blue-500 transition-colors">
+                            <span id="dropdownPlaceholder" class="text-gray-500">Click to select allergens...</span>
+                            <i data-lucide="chevron-down" id="dropdownArrow"
+                                class="h-5 w-5 text-gray-400 transition-transform"></i>
+                        </button>
+
+                        <!-- Selected Tags Display -->
+                        <div id="selectedTagsContainer" class="hidden flex-wrap gap-2 mt-3">
+                            <!-- Selected allergen tags will appear here -->
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu"
+                            class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 z-50 max-h-64 overflow-y-auto">
+                            <div class="p-2">
+                                <!-- Search input -->
+                                <div class="px-2 pb-2 border-b border-gray-100">
+                                    <input type="text" id="allergenSearch" placeholder="Search allergens..."
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-blue-500">
+                                </div>
+                                <!-- Allergen options will be generated by JavaScript -->
+                                <div id="allergenOptions" class="py-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons inside card -->
+                    <div class="flex justify-center gap-4 mt-6 pt-6 border-t border-gray-100">
+                        <button id="generateBtn" disabled
+                            class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                            Generate Code
+                            <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                        </button>
+                        <button id="resetBtn"
+                            class="hidden inline-flex items-center justify-center rounded-lg border-2 border-gray-200 bg-white px-8 py-4 text-lg font-medium text-gray-700 hover:bg-gray-50 transition-all">
+                            <i data-lucide="refresh-cw" class="mr-2 h-5 w-5"></i>
+                            Reset
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Result -->
-                <div id="encodeResult" class="hidden p-8 rounded-2xl gradient-card shadow-xl text-center bg-white border border-blue-100">
+                <div id="encodeResult"
+                    class="hidden p-8 rounded-2xl gradient-card shadow-xl text-center bg-white border border-blue-100">
                     <p class="text-sm text-gray-500 mb-3">Your allergen code</p>
                     <div id="generatedCodeText" class="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide mb-6">
                     </div>
-                    <button id="copyBtn" class="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                        <i data-lucide="copy" class="mr-2 h-4 w-4"></i>
-                        Copy Code
-                    </button>
+
+                    <!-- QR Code -->
+                    <div class="mb-6">
+                        <div id="qrCodeContainer"
+                            class="inline-block p-4 bg-white rounded-xl shadow-md border border-gray-100">
+                            <canvas id="qrCodeCanvas"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">Scan to share your allergen code</p>
+                    </div>
+
+                    <div class="flex justify-center gap-3">
+                        <button id="downloadQrBtn"
+                            class="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            <i data-lucide="download" class="mr-2 h-4 w-4"></i>
+                            Download QR
+                        </button>
+                        <button id="copyBtn"
+                            class="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            <i data-lucide="copy" class="mr-2 h-4 w-4"></i>
+                            Copy Code
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -170,14 +251,11 @@
             <div id="decodeSection" class="hidden space-y-8">
                 <div class="p-8 rounded-2xl gradient-card shadow-lg bg-white">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6 text-center">Enter a Code to Decode</h2>
-                    <input
-                        type="text"
-                        id="decodeInput"
-                        placeholder="e.g., ocean.maple.thunder"
-                        class="w-full px-6 py-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-                    >
+                    <input type="text" id="decodeInput" placeholder="e.g., ocean.maple.thunder"
+                        class="w-full px-6 py-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
                     <div class="flex justify-center">
-                        <button id="decodeBtn" disabled class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                        <button id="decodeBtn" disabled
+                            class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                             <i data-lucide="search" class="mr-2 h-5 w-5"></i>
                             Decode
                         </button>
@@ -185,7 +263,8 @@
                 </div>
 
                 <!-- Decode Result -->
-                <div id="decodeResult" class="hidden p-8 rounded-2xl gradient-card shadow-xl bg-white border border-green-100">
+                <div id="decodeResult"
+                    class="hidden p-8 rounded-2xl gradient-card shadow-xl bg-white border border-green-100">
                     <p class="text-sm text-gray-500 mb-4 text-center">This code represents:</p>
                     <div id="decodedAllergensList" class="flex flex-wrap justify-center gap-3">
                         <!-- Decoded allergens will appear here -->
@@ -199,11 +278,12 @@
     <!-- Footer -->
     <footer class="py-8 bg-gray-100 border-t">
         <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>Allergen Encoder - Making allergen communication simple and safe.</p>
+            <p>AllergyAlly - Making allergen communication simple and safe.</p>
         </div>
     </footer>
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="../script.js"></script>
     <script>
         // Mobile menu toggle
@@ -216,4 +296,5 @@
         }
     </script>
 </body>
+
 </html>
