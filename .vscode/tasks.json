@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "open-simple-browser",
+      "command": "code",
+      "args": [
+        "--command",
+        "simpleBrowser.show",
+        "--args",
+        "http://127.0.0.1:5000"
+      ]
+    }
+  ]
+}
