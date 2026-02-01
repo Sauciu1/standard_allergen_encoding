@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allergen Encoder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-blue-600 transition-colors">
+                    <i data-lucide="shield-check" class="h-6 w-6 text-blue-600"></i>
+                    AllergenCode
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Home</a>
+
+                    <!-- Products Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                            Products
+                            <i data-lucide="chevron-down" class="h-4 w-4 transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        <div class="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 w-56">
+                                <a href="product/individual.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                                        <i data-lucide="shield" class="h-4 w-4 text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">Individual</p>
+                                        <p class="text-xs text-gray-500">Personal allergen code</p>
+                                    </div>
+                                </a>
+                                <a href="product/group.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                                        <i data-lucide="users" class="h-4 w-4 text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">Group</p>
+                                        <p class="text-xs text-gray-500">Combine multiple codes</p>
+                                    </div>
+                                </a>
+                                <a href="product/menu.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+                                        <i data-lucide="file-text" class="h-4 w-4 text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">Menu Scanner</p>
+                                        <p class="text-xs text-gray-500">Check menu safety</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="product/individual.html" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i data-lucide="menu" class="h-6 w-6 text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="container mx-auto px-4 py-4 space-y-2">
+                <a href="index.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-900">Home</a>
+                <div class="px-4 py-2 text-sm font-semibold text-gray-500 uppercase">Products</div>
+                <a href="product/individual.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-50">
+                    <i data-lucide="shield" class="h-5 w-5 text-blue-600"></i>
+                    <span class="font-medium text-gray-900">Individual</span>
+                </a>
+                <a href="product/group.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-50">
+                    <i data-lucide="users" class="h-5 w-5 text-purple-600"></i>
+                    <span class="font-medium text-gray-900">Group</span>
+                </a>
+                <a href="product/menu.html" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-50">
+                    <i data-lucide="file-text" class="h-5 w-5 text-green-600"></i>
+                    <span class="font-medium text-gray-900">Menu Scanner</span>
+                </a>
+                <div class="pt-2 border-t border-gray-100">
+                    <a href="product/individual.html" class="block w-full text-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed nav -->
+    <div class="h-16"></div>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero min-h-[90vh] flex items-center relative overflow-hidden">
+        <div class="container mx-auto px-4 py-20 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-8 animate-fade-in">
+                    <i data-lucide="sparkles" class="h-4 w-4"></i>
+                    <span>Allergen safety, simplified</span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-bold text-gray-900 mb-6 animate-fade-in" style="animation-delay: 0.1s;">
+                    Your Allergens.
+                    <br />
+                    <span class="text-gradient">Three Words.</span>
+                </h1>
+
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-10 animate-fade-in" style="animation-delay: 0.2s;">
+                    Like what3words for allergens. Encode your food allergies into a memorable three-word code that anyone can decode. Never explain your allergies again.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style="animation-delay: 0.3s;">
+                    <a href="product/individual.html" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 transition-colors">
+                        Get Your Code
+                        <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                    </a>
+
+                    <a href="#how-it-works" class="inline-flex items-center justify-center rounded-lg border-2 border-gray-200 bg-white px-8 py-4 text-lg font-medium text-gray-900 hover:bg-gray-50 transition-colors">
+                        Learn More
+                    </a>
+                </div>
+
+                <div class="mt-16 p-8 rounded-2xl gradient-card shadow-xl animate-fade-in" style="animation-delay: 0.4s;">
+                    <p class="text-sm text-gray-500 mb-3">Example allergen code</p>
+                    <div class="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide">
+                        ocean.<span class="text-blue-600">maple</span>.thunder
+                    </div>
+                    <p class="mt-4 text-gray-500">
+                        = Milk, Peanuts, Shellfish
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    One System, Many Uses
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Whether you're dining alone, with a group, or checking a menu, AllergenCode keeps you safe.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <a href="product/individual.html" class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style="animation-delay: 0.1s;">
+                    <div class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="shield" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Individual</h3>
+                    <p class="text-gray-600">Encode your personal allergens into three memorable words. Share them easily with restaurants and friends.</p>
+                    <div class="mt-6 flex items-center gap-2 text-blue-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="product/group.html" class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style="animation-delay: 0.2s;">
+                    <div class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Group</h3>
+                    <p class="text-gray-600">Combine allergens from multiple people. Perfect for family dinners, events, and group travel.</p>
+                    <div class="mt-6 flex items-center gap-2 text-blue-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="product/menu.html" class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style="animation-delay: 0.3s;">
+                    <div class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Menu Scanner</h3>
+                    <p class="text-gray-600">Upload any menu and instantly see which items are safe or contain your allergens.</p>
+                    <div class="mt-6 flex items-center gap-2 text-blue-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    How It Works
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+                <div class="text-center animate-fade-in" style="animation-delay: 0s;">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        1
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Select Allergens</h3>
+                    <p class="text-gray-600">Choose your allergens from our comprehensive list</p>
+                </div>
+
+                <div class="text-center animate-fade-in" style="animation-delay: 0.1s;">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        2
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Your Code</h3>
+                    <p class="text-gray-600">Receive a unique three-word code that represents your allergies</p>
+                </div>
+
+                <div class="text-center animate-fade-in" style="animation-delay: 0.2s;">
+                    <div class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        3
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Share Anywhere</h3>
+                    <p class="text-gray-600">Share your code with restaurants, friends, or scan menus</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center p-12 rounded-3xl gradient-card shadow-2xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Ready to simplify your allergen communication?
+                </h2>
+                <p class="text-gray-600 text-lg mb-8">
+                    Get your unique allergen code in seconds. It's free and always will be.
+                </p>
+                <a href="product/individual.html" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-blue-700 transition-colors">
+                    Get Started Now
+                    <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-100 border-t">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>Allergen Encoder - Making allergen communication simple and safe.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
