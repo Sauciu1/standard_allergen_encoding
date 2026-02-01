@@ -273,18 +273,22 @@ class DatabaseManager:
             # Get dictionary words
             words = self.get_dictionary_words()
             
-            # Insert words with sequential numbers
+            # Insert words with sequential numbers, starting with "none" at 0
             insert_query = """
                 INSERT INTO word_mapping (number, word)
                 VALUES (%s, %s)
                 ON CONFLICT (word) DO NOTHING
             """
             
-            data = [(i, word) for i, word in enumerate(words, start=1)]
+            # Add "none" as the first entry (number 0)
+            data = [(0, 'none')]
+            # Then add all dictionary words starting from 1
+            data.extend([(i, word) for i, word in enumerate(words, start=1)])
+            
             cursor.executemany(insert_query, data)
             self.connection.commit()
             
-            logger.info(f"Inserted {cursor.rowcount} words into word_mapping table.")
+            logger.info(f"Inserted {cursor.rowcount} words into word_mapping table (including 'none' at 0).")
         except Exception as e:
             self.connection.rollback()
             logger.error(f"Error populating word mapping: {e}")
