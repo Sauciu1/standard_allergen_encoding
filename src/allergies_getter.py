@@ -1,7 +1,9 @@
 from typing import List, Optional
 import logging
+import pickle
+from pathlib import Path
+
 from allergies_encoder import AllergiesEncoder
-from db_manager import DatabaseManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -13,34 +15,117 @@ class AllergiesGetter:
     def __init__(self, auto_init_db: bool = True):
         """
         Initialize AllergiesGetter with encoder and database connection.
-        Uses all allergen sets (main + secondary groups).
+        Automatically falls back to dump file if PostgreSQL is unavailable.
         
         Args:
             auto_init_db: Whether to automatically initialize database if needed
         """
-        self.encoder = AllergiesEncoder()  # Now uses all allergens
-        self.db = DatabaseManager()
+        self.encoder = AllergiesEncoder()
+        self.db = None
+        self.use_dump = False
+        self.word_mapping = {}  # For dump file fallback
         
-        # Initialize database if it doesn't exist or is empty
-        if auto_init_db:
-            try:
-                # Check if database has data
-                if not self.db.database_exists():
-                    logger.info("Database doesn't exist, initializing...")
-                    self.db.initialize()
-                else:
-                    # Database exists, but check if it has data
-                    total_words = self.db.get_total_words()
-                    if total_words == 0:
-                        logger.info("Database is empty, populating...")
-                        self.db.populate_word_mapping()
+        # Try PostgreSQL first
+        try:
+            from db_manager import DatabaseManager
+            self.db = DatabaseManager()
+            
+            # Initialize database if it doesn't exist or is empty
+            if auto_init_db:
+                try:
+                    if not self.db.database_exists():
+                        logger.info("Database doesn't exist, trying to load from dump...")
+                        if not self._load_from_dump():
+                            logger.info("Initializing new database...")
+                            self.db.initialize()
                     else:
-                        logger.info(f"Database ready with {total_words} words")
-            except Exception as e:
-                logger.warning(f"Could not auto-initialize database: {e}")
-                logger.warning("You may need to run: uv run src/db_manager.py")
+                        total_words = self.db.get_total_words()
+                        if total_words == 0:
+                            logger.info("Database is empty, trying to load from dump...")
+                            if not self._load_from_dump():
+                                logger.info("Populating database...")
+                                self.db.populate_word_mapping()
+                        else:
+                            logger.info(f"Database ready with {total_words} words")
+                except Exception as e:
+                    logger.warning(f"Could not initialize database: {e}")
+                    logger.info("Trying to use dump file instead...")
+                    if not self._load_from_dump():
+                        raise RuntimeError("Cannot initialize database or load dump file")
+                    
+        except ImportError as e:
+            logger.warning(f"PostgreSQL not available: {e}")
+            logger.info("Using database dump file instead...")
+            if not self._load_from_dump():
+                raise RuntimeError("Cannot load database dump file. Please ensure data/database/word_mapping.pkl exists")
+        except Exception as e:
+            logger.warning(f"Database connection failed: {e}")
+            logger.info("Falling back to database dump file...")
+            if not self._load_from_dump():
+                raise RuntimeError("Cannot connect to database or load dump file")
         
-        logger.info("AllergiesGetter initialized with all allergen sets")
+        if self.use_dump:
+            logger.info(f"Using dump file with {len(self.word_mapping)} words")
+        else:
+            logger.info("Using PostgreSQL database")
+    
+    def _load_from_dump(self) -> bool:
+        """
+        Load word mapping from pickle dump file.
+        
+        Returns:
+            True if successful, False otherwise
+        """
+        dump_path = Path(__file__).parent.parent / "data" / "database" / "word_mapping.pkl"
+        
+        if not dump_path.exists():
+            logger.error(f"Dump file not found at {dump_path}")
+            return False
+        
+        try:
+            with open(dump_path, 'rb') as f:
+                self.word_mapping = pickle.load(f)
+            
+            self.use_dump = True
+            # Close any database connection
+            if self.db:
+                try:
+                    self.db.close()
+                except:
+                    pass
+                self.db = None
+            
+            logger.info(f"Loaded {len(self.word_mapping)} words from dump file")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to load dump file: {e}")
+            return False
+    
+    def get_total_words(self) -> int:
+        """Get total number of words in the database or dump."""
+        if self.use_dump:
+            return len(self.word_mapping)
+        else:
+            return self.db.get_total_words()
+    
+    def get_word_by_number(self, number: int) -> Optional[str]:
+        """Get word by its number."""
+        if self.use_dump:
+            return self.word_mapping.get(number)
+        else:
+            return self.db.get_word_by_number(number)
+    
+    def get_number_by_word(self, word: str) -> Optional[int]:
+        """Get number by word."""
+        if self.use_dump:
+            # Reverse lookup in dictionary
+            for num, w in self.word_mapping.items():
+                if w == word:
+                    return num
+            return None
+        else:
+            return self.db.get_number_by_word(word)
     
     def allergies_to_words(self, allergens: List[str]) -> List[Optional[str]]:
         """
@@ -56,7 +141,7 @@ class AllergiesGetter:
         encoded_numbers = self.encoder.encode_all(allergens)
         
         # Check if any encoding exceeds database range
-        total_words = self.db.get_total_words()
+        total_words = self.get_total_words()
         words = []
         
         for i, encoded_number in enumerate(encoded_numbers):
@@ -67,7 +152,7 @@ class AllergiesGetter:
                 )
                 words.append(None)
             else:
-                word = self.db.get_word_by_number(encoded_number)
+                word = self.get_word_by_number(encoded_number)
                 if not word:
                     logger.warning(
                         f"No word found for number {encoded_number} at index {i}. "
@@ -90,7 +175,7 @@ class AllergiesGetter:
         # Get numbers from database
         numbers = []
         for word in words:
-            number = self.db.get_number_by_word(word)
+            number = self.get_number_by_word(word)
             if number is None:
                 logger.warning(f"Word '{word}' not found in database")
                 return None
@@ -100,6 +185,7 @@ class AllergiesGetter:
         allergens = self.encoder.decode_all(numbers)
         
         return allergens
+    
     def phrases_list_to_combined_encoding(self, phrases_list: List[List[str]], method: str ='union')->Optional[List[int]]:
         """
         Combine multiple lists of allergen phrases into a single encoding.
@@ -125,7 +211,8 @@ class AllergiesGetter:
     
     def close(self):
         """Close database connection."""
-        self.db.close()
+        if self.db:
+            self.db.close()
     
     def __enter__(self):
         """Context manager entry."""
