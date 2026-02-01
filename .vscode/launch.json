@@ -1,0 +1,12 @@
+{
+  "name": "Flask (flaskr)",
+  "type": "python",
+  "request": "launch",
+  "module": "flask",
+  "args": ["--app", "flaskr", "run"],
+  "postDebugTask": "open-simple-browser",
+"justMyCode": false,
+"configurations": [
+
+]
+}

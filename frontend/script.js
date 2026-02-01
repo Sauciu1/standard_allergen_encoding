@@ -263,20 +263,23 @@ function generateQRCode(code) {
     if (!canvas) return;
 
     // Check if QRCode library is loaded
-    if (typeof QRCode !== 'undefined') {
-        QRCode.toCanvas(canvas, code, {
-            width: 180,
-            margin: 2,
-            color: {
-                dark: '#1f2937',  // gray-800
-                light: '#ffffff'
-            }
-        }, function(error) {
-            if (error) console.error('QR Code generation error:', error);
-        });
-    } else {
-        console.warn('QRCode library not loaded');
+
+    if (typeof QRCode === 'undefined') {
+        console.error('QRCode library is not loaded. Ensure qrcode.min.js is included before script.js.');
+        return;
     }
+
+    QRCode.toCanvas(canvas, code, {
+        width: 180,
+        margin: 2,
+        color: {
+            dark: '#1f2937',  // gray-800
+            light: '#ffffff'
+        }
+    }, function(error) {
+        if (error) console.error('QR Code generation error:', error);
+    });
+
 }
 
 // ==========================================
@@ -340,6 +343,9 @@ function setupEncode() {
 
             const codeText = document.getElementById('generatedCodeText');
             codeText.innerHTML = `${words[0]}.<span class="text-blue-600">${words[1]}</span>.${words[2]}`;
+
+            console.log('Generated code:', code);
+            console.log('Selected allergens:', selectedAllergens);
 
             // Generate QR Code
             generateQRCode(code);
