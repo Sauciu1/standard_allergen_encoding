@@ -100,6 +100,28 @@ class AllergiesGetter:
         allergens = self.encoder.decode_all(numbers)
         
         return allergens
+    def phrases_list_to_combined_encoding(self, phrases_list: List[List[str]], method: str ='union')->Optional[List[int]]:
+        """
+        Combine multiple lists of allergen phrases into a single encoding.
+        
+        Args:
+            phrases_list: List of lists of allergen phrases
+            method: 'union' or 'intersection' to combine encodings
+            
+        Returns:
+            Combined encoding as list of integers, or None if any error
+        """
+        encodings = []
+        for phrases in phrases_list:
+            try:
+                encoding = self.encoder.encode_all(phrases)
+                encodings.append(encoding)
+            except ValueError as e:
+                logger.warning(f"Error encoding phrases {phrases}: {e}")
+                return None
+        
+        combined_encoding = self.encoder.combine_lists_of_encodings(encodings, method=method)
+        return combined_encoding
     
     def close(self):
         """Close database connection."""
@@ -147,3 +169,39 @@ if __name__ == "__main__":
         words = getter.allergies_to_words(empty_allergens)
         print(f"\nEmpty allergens -> words: {words}")
         print(f"First word is 'none': {words[0] == 'none'}")
+    
+    # example 4: list of phrases to combined encoding
+    print("\n" + "=" * 50)
+    print("Example 4: Combine multiple allergen phrase lists")
+    print("=" * 50)
+
+    with AllergiesGetter() as getter:
+        phrases_list = [
+            ['Peanuts', 'Eggs'],
+            ['Milk', 'Pine nut'],
+            ['Tuna', 'Fish']
+        ]
+
+        all_phrases = set()
+        for phrases in phrases_list:
+            all_phrases.update(phrases)
+        all_phrases = list(all_phrases)
+        direct_encoding = getter.encoder.encode_all(all_phrases)
+        print(f"\nDirect Encoding of all phrases: {direct_encoding}")
+
+        #additional check using phrases of different sizes
+        phrases_list_varied = [
+            ['Peanuts', 'Eggs', 'Milk'],
+            ['Pine nut'],
+            ['Tuna', 'Fish', 'Celery']
+        ]
+
+        all_phrases_varied = set()
+        for phrases in phrases_list_varied:
+            all_phrases_varied.update(phrases)
+        all_phrases_varied = list(all_phrases_varied)
+        direct_encoding_varied = getter.encoder.encode_all(all_phrases_varied)
+        print(f"\nDirect Encoding of varied phrases: {direct_encoding_varied}")
+        # show the decoded allergens from direct encoding
+        decoded_direct = getter.encoder.decode_all(direct_encoding_varied)
+        print(f"Decoded from direct encoding: {decoded_direct}")

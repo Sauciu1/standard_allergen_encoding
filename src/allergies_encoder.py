@@ -92,18 +92,41 @@ class AllergiesEncoder:
 
     def encode_all(self, allergens:list[str])->list[int]:
         allergens = self.lowercase_list(allergens)
+        
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_allergens = []
         for allergen in allergens:
+            if allergen not in seen:
+                seen.add(allergen)
+                unique_allergens.append(allergen)
+        
+        # Validate all allergens exist
+        for allergen in unique_allergens:
             if allergen not in self.all_list:
                 raise ValueError(f"Allergen '{allergen}' not recognized.")
+        
+        # Separate main and secondary allergens to avoid double-encoding
+        main_allergens = [a for a in unique_allergens if a in self.lists['main']]
+        secondary_allergens = [a for a in unique_allergens if a not in self.lists['main']]
 
-        main=  self._encode_main(allergens)
-        secondary = self._encode_secondary_group(allergens)
+        main = self._encode_main(main_allergens)
+        secondary = self._encode_secondary_group(secondary_allergens)
         return [main, *secondary]
     
     def decode_all(self, encodings:list[int])->list[str]:
         main = self._decode_main(encodings[0])
         secondary = self._decode_secondary_group(encodings[1:])
-        return [*main, *secondary]
+        
+        # Remove duplicates from decoded result while preserving order
+        seen = set()
+        result = []
+        for allergen in [*main, *secondary]:
+            if allergen not in seen:
+                seen.add(allergen)
+                result.append(allergen)
+        
+        return result
     
        
     
