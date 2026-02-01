@@ -5,22 +5,8 @@
 // ==========================================
 // 1. DATA & CONSTANTS
 // ==========================================
-const ALLERGENS = [
-    { id: "milk", name: "Milk", emoji: "🥛" },
-    { id: "eggs", name: "Eggs", emoji: "🥚" },
-    { id: "peanuts", name: "Peanuts", emoji: "🥜" },
-    { id: "tree-nuts", name: "Tree Nuts", emoji: "🌰" },
-    { id: "wheat", name: "Wheat", emoji: "🌾" },
-    { id: "soy", name: "Soy", emoji: "🫘" },
-    { id: "fish", name: "Fish", emoji: "🐟" },
-    { id: "shellfish", name: "Shellfish", emoji: "🦐" },
-    { id: "sesame", name: "Sesame", emoji: "🫘" },
-    { id: "mustard", name: "Mustard", emoji: "🟡" },
-    { id: "celery", name: "Celery", emoji: "🥬" },
-    { id: "lupin", name: "Lupin", emoji: "🌸" },
-    { id: "molluscs", name: "Molluscs", emoji: "🦪" },
-    { id: "sulphites", name: "Sulphites", emoji: "🍷" },
-];
+// Allergens will be loaded from the API
+let ALLERGENS = [];
 
 const WORD_POOL = [
     "ocean", "maple", "thunder", "crystal", "velvet", "ember", "frost", "coral",
@@ -77,7 +63,7 @@ function decodeWords(code) {
 // 3. DOM INITIALIZATION
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Lucide Icons
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
@@ -86,6 +72,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Only run if we're on the individual page
     const dropdownBtn = document.getElementById('dropdownBtn');
     if (!dropdownBtn) return;
+
+    // Fetch allergens from API
+    try {
+        const response = await fetch('/api/allergens');
+        const data = await response.json();
+        ALLERGENS = data.allergens || [];
+        console.log('Loaded allergens:', ALLERGENS);
+    } catch (error) {
+        console.error('Failed to load allergens from API:', error);
+        // Fallback to empty array
+        ALLERGENS = [];
+    }
 
     // Render allergen options in dropdown
     renderAllergenOptions();
@@ -111,15 +109,16 @@ function renderAllergenOptions() {
     const optionsContainer = document.getElementById('allergenOptions');
     if (!optionsContainer) return;
 
-    ALLERGENS.forEach(allergen => {
+    // Sort allergens alphabetically
+    const sortedAllergens = [...ALLERGENS].sort();
+
+    sortedAllergens.forEach(allergenName => {
         const option = document.createElement('label');
         option.className = "allergen-option flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors";
-        option.dataset.id = allergen.id;
-        option.dataset.name = allergen.name.toLowerCase();
+        option.dataset.name = allergenName.toLowerCase();
         option.innerHTML = `
-            <input type="checkbox" class="allergen-checkbox w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500" data-id="${allergen.id}">
-            <span class="text-xl">${allergen.emoji}</span>
-            <span class="text-sm font-medium text-gray-900">${allergen.name}</span>
+            <input type="checkbox" class="allergen-checkbox w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500" data-name="${allergenName}">
+            <span class="text-sm font-medium text-gray-900">${allergenName}</span>
         `;
         optionsContainer.appendChild(option);
     });
@@ -127,13 +126,13 @@ function renderAllergenOptions() {
     // Add checkbox change listeners
     document.querySelectorAll('.allergen-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
-            const id = e.target.dataset.id;
+            const name = e.target.dataset.name;
             if (e.target.checked) {
-                if (!selectedAllergens.includes(id)) {
-                    selectedAllergens.push(id);
+                if (!selectedAllergens.includes(name)) {
+                    selectedAllergens.push(name);
                 }
             } else {
-                selectedAllergens = selectedAllergens.filter(a => a !== id);
+                selectedAllergens = selectedAllergens.filter(a => a !== name);
             }
             updateSelectedDisplay();
             updateButtonStates();
@@ -195,11 +194,11 @@ function updateSelectedDisplay() {
 
     // Update count badge color
     if (count > 0) {
-        countDisplay.classList.remove('bg-blue-100', 'text-blue-700');
-        countDisplay.classList.add('bg-blue-600', 'text-white');
+        countDisplay.classList.remove('bg-green-100', 'text-green-700');
+        countDisplay.classList.add('bg-green-600', 'text-white');
     } else {
-        countDisplay.classList.remove('bg-blue-600', 'text-white');
-        countDisplay.classList.add('bg-blue-100', 'text-blue-700');
+        countDisplay.classList.remove('bg-green-600', 'text-white');
+        countDisplay.classList.add('bg-green-100', 'text-green-700');
     }
 
     // Update placeholder
@@ -219,31 +218,27 @@ function updateSelectedDisplay() {
         tagsContainer.classList.remove('hidden');
         tagsContainer.classList.add('flex');
 
-        selectedAllergens.forEach(id => {
-            const allergen = ALLERGENS.find(a => a.id === id);
-            if (allergen) {
-                const tag = document.createElement('span');
-                tag.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium";
-                tag.innerHTML = `
-                    <span>${allergen.emoji}</span>
-                    <span>${allergen.name}</span>
-                    <button type="button" class="remove-tag ml-1 hover:text-blue-900" data-id="${id}">
-                        <i data-lucide="x" class="h-3 w-3"></i>
-                    </button>
-                `;
-                tagsContainer.appendChild(tag);
-            }
+        selectedAllergens.forEach(allergenName => {
+            const tag = document.createElement('span');
+            tag.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium";
+            tag.innerHTML = `
+                <span>${allergenName}</span>
+                <button type="button" class="remove-tag ml-1 hover:text-green-900" data-name="${allergenName}">
+                    <i data-lucide="x" class="h-3 w-3"></i>
+                </button>
+            `;
+            tagsContainer.appendChild(tag);
         });
 
         // Add remove tag listeners
         document.querySelectorAll('.remove-tag').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const id = btn.dataset.id;
-                selectedAllergens = selectedAllergens.filter(a => a !== id);
+                const name = btn.dataset.name;
+                selectedAllergens = selectedAllergens.filter(a => a !== name);
 
                 // Uncheck the checkbox
-                const checkbox = document.querySelector(`.allergen-checkbox[data-id="${id}"]`);
+                const checkbox = document.querySelector(`.allergen-checkbox[data-name="${name}"]`);
                 if (checkbox) checkbox.checked = false;
 
                 updateSelectedDisplay();
@@ -430,21 +425,18 @@ function setupDecode() {
 }
 
 function processDecodedCode(code) {
-    const allergenIds = decodeWords(code);
+    const allergenNames = decodeWords(code);
     const decodeResult = document.getElementById('decodeResult');
 
-    if (allergenIds) {
+    if (allergenNames) {
         const listContainer = document.getElementById('decodedAllergensList');
         listContainer.innerHTML = '';
 
-        allergenIds.forEach(id => {
-            const allergen = ALLERGENS.find(a => a.id === id);
-            if (allergen) {
-                const span = document.createElement('span');
-                span.className = "px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-sm font-medium text-blue-700 flex items-center gap-2";
-                span.innerHTML = `<span>${allergen.emoji}</span> ${allergen.name}`;
-                listContainer.appendChild(span);
-            }
+        allergenNames.forEach(name => {
+            const span = document.createElement('span');
+            span.className = "px-4 py-2 rounded-full bg-green-50 border border-green-200 text-sm font-medium text-green-700";
+            span.textContent = name;
+            listContainer.appendChild(span);
         });
 
         decodeResult.classList.remove('hidden');

@@ -2,208 +2,237 @@
 // Menu Scanner - Main Script
 // ==========================================
 
-// ==========================================
-// 1. MOCK DATA
-// ==========================================
-const MOCK_MENU_ITEMS = [
-    { name: "Caesar Salad", ingredients: ["lettuce", "parmesan", "croutons", "egg"], allergens: ["milk", "eggs", "wheat"] },
-    { name: "Grilled Salmon", ingredients: ["salmon", "lemon", "herbs"], allergens: ["fish"] },
-    { name: "Pasta Carbonara", ingredients: ["pasta", "bacon", "eggs", "parmesan"], allergens: ["wheat", "eggs", "milk"] },
-    { name: "Pad Thai", ingredients: ["rice noodles", "shrimp", "peanuts", "tofu"], allergens: ["shellfish", "peanuts", "soy"] },
-    { name: "Vegetable Stir Fry", ingredients: ["mixed vegetables", "sesame oil", "soy sauce"], allergens: ["sesame", "soy"] },
-    { name: "Grilled Chicken", ingredients: ["chicken", "herbs", "olive oil"], allergens: [] },
-    { name: "Fresh Fruit Bowl", ingredients: ["seasonal fruits"], allergens: [] },
-    { name: "Mushroom Risotto", ingredients: ["rice", "mushrooms", "parmesan", "butter"], allergens: ["milk"] },
-    { name: "Fish Tacos", ingredients: ["fish", "tortilla", "cabbage", "lime"], allergens: ["fish", "wheat"] },
-    { name: "Garden Salad", ingredients: ["mixed greens", "tomatoes", "cucumber", "olive oil"], allergens: [] },
-];
+// Initialize Lucide icons
+lucide.createIcons();
 
-const ALLERGEN_LABELS = {
-    milk: { name: "Milk", emoji: "🥛" },
-    eggs: { name: "Eggs", emoji: "🥚" },
-    peanuts: { name: "Peanuts", emoji: "🥜" },
-    wheat: { name: "Wheat", emoji: "🌾" },
-    soy: { name: "Soy", emoji: "🫘" },
-    fish: { name: "Fish", emoji: "🐟" },
-    shellfish: { name: "Shellfish", emoji: "🦐" },
-    sesame: { name: "Sesame", emoji: "🫘" },
-    "tree-nuts": { name: "Tree Nuts", emoji: "🌰" },
-    mustard: { name: "Mustard", emoji: "🟡" },
-    celery: { name: "Celery", emoji: "🥬" },
-};
+// API Configuration - use current host to work with both localhost and 127.0.0.1
+const API_BASE_URL = `http://${window.location.hostname}:5000/api`;
+
+// DOM Elements
+const inputView = document.getElementById('inputView');
+const resultsView = document.getElementById('resultsView');
+const userCodeInput = document.getElementById('userCodeInput');
+const analyzeMenuBtn = document.getElementById('analyzeMenuBtn');
+const resetMenuBtn = document.getElementById('resetMenuBtn');
+const menuListContainer = document.getElementById('menuListContainer');
+const activeAllergensList = document.getElementById('activeAllergensList');
+const safeCountEl = document.getElementById('safeCount');
+const avoidCountEl = document.getElementById('avoidCount');
 
 // State
-let userAllergens = [];
+let currentResults = null;
+let userAllergenPhrases = [];
+let decodedAllergens = [];
 
-// ==========================================
-// 2. DOM INITIALIZATION
-// ==========================================
+// Enable/disable analyze button based on input
+if (userCodeInput && analyzeMenuBtn) {
+    userCodeInput.addEventListener('input', () => {
+        const hasInput = userCodeInput.value.trim().length > 0;
+        analyzeMenuBtn.disabled = !hasInput;
+    });
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Lucide Icons
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-
-    // Get DOM elements
-    const codeInput = document.getElementById('userCodeInput');
-    const analyzeBtn = document.getElementById('analyzeMenuBtn');
-
-    // Only run if we're on the menu page
-    if (!codeInput || !analyzeBtn) return;
-
-    // Setup event listeners
-    setupInputValidation();
-    setupAnalyze();
-    setupReset();
-});
-
-// ==========================================
-// 3. EVENT HANDLERS
-// ==========================================
-
-function setupInputValidation() {
-    const codeInput = document.getElementById('userCodeInput');
-    const analyzeBtn = document.getElementById('analyzeMenuBtn');
-
-    codeInput.addEventListener('input', (e) => {
-        analyzeBtn.disabled = e.target.value.trim() === "";
+    // Analyze menu button click
+    analyzeMenuBtn.addEventListener('click', async () => {
+        const userCode = userCodeInput.value.trim();
+        
+        if (!userCode) {
+            showError('Please enter your allergen code');
+            return;
+        }
+        
+        // Parse allergen code (split by dots or spaces)
+        const allergenPhrases = userCode.split(/[.\s,]+/).filter(word => word.length > 0);
+        
+        if (allergenPhrases.length === 0) {
+            showError('Invalid allergen code format');
+            return;
+        }
+        
+        await analyzeMenu(allergenPhrases);
     });
 }
 
-function setupAnalyze() {
-    const analyzeBtn = document.getElementById('analyzeMenuBtn');
-    const codeInput = document.getElementById('userCodeInput');
-    const inputView = document.getElementById('inputView');
-    const resultsView = document.getElementById('resultsView');
+// Reset button click
+if (resetMenuBtn) {
+    resetMenuBtn.addEventListener('click', () => {
+        inputView.classList.remove('hidden');
+        resultsView.classList.add('hidden');
+        userCodeInput.value = '';
+        analyzeMenuBtn.disabled = true;
+        currentResults = null;
+        userAllergenPhrases = [];
+        decodedAllergens = [];  // Reset decoded allergens
+    });
+}
 
-    analyzeBtn.addEventListener('click', () => {
-        const code = codeInput.value.toLowerCase();
-
-        // Mock decoding logic
-        if (code.includes("ocean")) {
-            userAllergens = ["milk", "peanuts", "shellfish"];
-        } else if (code.includes("crystal")) {
-            userAllergens = ["eggs", "wheat"];
-        } else if (code.includes("meadow")) {
-            userAllergens = ["fish", "tree-nuts"];
-        } else {
-            // Default fallback for demo
-            userAllergens = ["milk", "eggs"];
+// Analyze menu function
+async function analyzeMenu(allergenPhrases) {
+    try {
+        // Show loading state
+        analyzeMenuBtn.disabled = true;
+        analyzeMenuBtn.innerHTML = '<i data-lucide="loader-2" class="mr-2 h-5 w-5 animate-spin"></i> Analyzing...';
+        lucide.createIcons();
+        
+        console.log('Sending request to API with phrases:', allergenPhrases);
+        
+        // Call API
+        const response = await fetch(`${API_BASE_URL}/analyze-menu`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                allergen_phrases: allergenPhrases
+            })
+        });
+        
+        console.log('Response status:', response.status);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            throw new Error('Server returned non-JSON response. Make sure Flask API is running: flask --app flaskr run --debug');
         }
-
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Failed to analyze menu');
+        }
+        
+        // Store results
+        currentResults = data.results;
+        userAllergenPhrases = data.user_allergen_phrases;
+        decodedAllergens = data.user_allergens || [];  // Store decoded allergens
+        
+        // Display results
+        displayResults(data);
+        
         // Switch views
         inputView.classList.add('hidden');
         resultsView.classList.remove('hidden');
-
-        // Render results
-        renderActiveAllergens();
-        renderMenu();
-
-        // Refresh icons
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    });
+        
+    } catch (error) {
+        console.error('Error analyzing menu:', error);
+        showError(error.message || 'Failed to analyze menu. Please check console for details.');
+    } finally {
+        // Reset button state
+        analyzeMenuBtn.disabled = false;
+        analyzeMenuBtn.innerHTML = '<i data-lucide="search" class="mr-2 h-5 w-5"></i> Analyze Menu';
+        lucide.createIcons();
+    }
 }
 
-function setupReset() {
-    const resetBtn = document.getElementById('resetMenuBtn');
-    const codeInput = document.getElementById('userCodeInput');
-    const analyzeBtn = document.getElementById('analyzeMenuBtn');
-    const inputView = document.getElementById('inputView');
-    const resultsView = document.getElementById('resultsView');
-
-    resetBtn.addEventListener('click', () => {
-        userAllergens = [];
-        codeInput.value = "";
-        analyzeBtn.disabled = true;
-
-        // Switch views back
-        resultsView.classList.add('hidden');
-        inputView.classList.remove('hidden');
-    });
-}
-
-// ==========================================
-// 4. RENDERING FUNCTIONS
-// ==========================================
-
-function renderActiveAllergens() {
-    const container = document.getElementById('activeAllergensList');
-    container.innerHTML = '';
-
-    userAllergens.forEach(id => {
-        const data = ALLERGEN_LABELS[id];
-        const span = document.createElement('span');
-        span.className = "px-3 py-1 rounded-full bg-white border border-blue-200 text-sm font-medium flex items-center gap-1 text-blue-700 shadow-sm";
-        span.innerText = `${data ? data.emoji : ''} ${data ? data.name : id}`;
-        container.appendChild(span);
-    });
-}
-
-function renderMenu() {
-    const container = document.getElementById('menuListContainer');
-    container.innerHTML = '';
-
-    let safeCount = 0;
-    let avoidCount = 0;
-
-    MOCK_MENU_ITEMS.forEach(item => {
-        // Check safety
-        const conflictAllergens = item.allergens.filter(a => userAllergens.includes(a));
-        const isSafe = conflictAllergens.length === 0;
-
-        if (isSafe) safeCount++; else avoidCount++;
-
-        // Create card
-        const card = document.createElement('div');
-        const borderColor = isSafe ? "border-green-200 bg-green-50/50" : "border-red-200 bg-red-50/50";
-        const icon = isSafe
-            ? `<i data-lucide="check-circle" class="h-5 w-5 text-green-600"></i>`
-            : `<i data-lucide="alert-triangle" class="h-5 w-5 text-red-600"></i>`;
-        const badgeClass = isSafe ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700";
-        const badgeText = isSafe ? "Safe" : "Avoid";
-
-        card.className = `p-6 rounded-xl border-2 transition-all ${borderColor}`;
-
-        // Build ingredients string
-        const ingredientsStr = item.ingredients.join(", ");
-
-        // Build conflict tags (only if unsafe)
-        let conflictTagsHTML = '';
-        if (!isSafe) {
-            conflictTagsHTML = `<div class="mt-3 flex flex-wrap gap-2">`;
-            conflictAllergens.forEach(a => {
-                const label = ALLERGEN_LABELS[a];
-                conflictTagsHTML += `
-                    <span class="px-2 py-1 rounded-md bg-red-100 text-red-700 text-xs font-bold flex items-center gap-1">
-                        ${label ? label.emoji : ''} ${label ? label.name : a}
-                    </span>`;
-            });
-            conflictTagsHTML += `</div>`;
-        }
-
-        // Card HTML
-        card.innerHTML = `
-            <div class="flex items-start justify-between">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-2">
-                        ${icon}
-                        <h3 class="font-semibold text-gray-900 text-lg">${item.name}</h3>
+// Display results function
+function displayResults(data) {
+    // Update stats
+    safeCountEl.textContent = data.stats.safe;
+    avoidCountEl.textContent = data.stats.avoid;
+    
+    // Display decoded allergens (not the encoded phrases)
+    const allergensToDisplay = data.user_allergens && data.user_allergens.length > 0 
+        ? data.user_allergens 
+        : data.user_allergen_phrases;
+    
+    activeAllergensList.innerHTML = allergensToDisplay.map(allergen => `
+        <span class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+            ${escapeHtml(capitalizeFirst(allergen))}
+        </span>
+    `).join('');
+    
+    // Display menu items
+    menuListContainer.innerHTML = data.results.map(item => {
+        const isSafe = item.allowed;
+        const bgColor = isSafe ? 'bg-green-50' : 'bg-red-50';
+        const borderColor = isSafe ? 'border-green-200' : 'border-red-200';
+        const iconColor = isSafe ? 'text-green-600' : 'text-red-600';
+        const icon = isSafe ? 'check-circle' : 'alert-triangle';
+        const statusText = isSafe ? 'SAFE' : 'AVOID';
+        const statusColor = isSafe ? 'text-green-700' : 'text-red-700';
+        
+        return `
+            <div class="p-4 rounded-xl border ${borderColor} ${bgColor}">
+                <div class="flex items-start gap-4">
+                    <i data-lucide="${icon}" class="h-6 w-6 ${iconColor} flex-shrink-0 mt-0.5"></i>
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between gap-4 mb-2">
+                            <h3 class="font-semibold text-gray-900">${escapeHtml(item.meal)}</h3>
+                            <span class="px-2 py-1 rounded text-xs font-bold ${statusColor} whitespace-nowrap">
+                                ${statusText}
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-2">${escapeHtml(item.reason)}</p>
+                        ${item.item_allergens && item.item_allergens.length > 0 ? `
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="text-xs text-gray-500">Contains:</span>
+                                ${item.item_allergens.map(allergen => {
+                                    const isMatched = item.matched_allergens && item.matched_allergens.includes(allergen);
+                                    const allergenBg = isMatched ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600';
+                                    return `<span class="px-2 py-0.5 rounded text-xs ${allergenBg}">${escapeHtml(allergen)}</span>`;
+                                }).join('')}
+                            </div>
+                        ` : ''}
                     </div>
-                    <p class="text-sm text-gray-600">${ingredientsStr}</p>
-                    ${conflictTagsHTML}
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-bold ${badgeClass}">${badgeText}</span>
             </div>
         `;
-
-        container.appendChild(card);
-    });
-
-    // Update stats
-    document.getElementById('safeCount').innerText = safeCount;
-    document.getElementById('avoidCount').innerText = avoidCount;
-
-    // Refresh icons
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    }).join('');
+    
+    // Reinitialize Lucide icons
+    lucide.createIcons();
 }
+
+// Helper function to capitalize first letter
+function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Show error message
+function showError(message) {
+    // Create a temporary error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 z-50 p-4 rounded-lg bg-red-50 border border-red-200 shadow-lg max-w-md';
+    errorDiv.innerHTML = `
+        <div class="flex items-center gap-3">
+            <i data-lucide="alert-circle" class="h-5 w-5 text-red-600 flex-shrink-0"></i>
+            <p class="text-sm text-red-700">${escapeHtml(message)}</p>
+        </div>
+    `;
+    
+    document.body.appendChild(errorDiv);
+    lucide.createIcons();
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 5000);
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Check API health on page load
+async function checkAPIHealth() {
+    try {
+        const response = await fetch(`http://${window.location.hostname}:5000/health`);
+        if (!response.ok) {
+            throw new Error('API not responding');
+        }
+        console.log('✅ API connection successful');
+    } catch (error) {
+        console.error('❌ API connection failed:', error);
+        showError('Cannot connect to server. Please start the Flask API: flask --app flaskr run --debug');
+    }
+}
+
+// Check API health when page loads
+window.addEventListener('load', () => {
+    checkAPIHealth();
+});
