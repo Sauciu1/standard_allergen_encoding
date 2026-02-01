@@ -104,6 +104,32 @@ class AllergiesEncoder:
         main = self._decode_main(encodings[0])
         secondary = self._decode_secondary_group(encodings[1:])
         return [*main, *secondary]
+    
+    def combine_lists_of_encodings(self, list_of_encodings: list[list[int]], method: Literal['union', 'intersection']='union')->list[int]:
+        if not list_of_encodings:
+            return []
+        
+        num_encodings = len(list_of_encodings[0])
+        for encoding in list_of_encodings:
+            if len(encoding) != num_encodings:
+                raise ValueError("All encodings must have the same length.")
+        
+        combined_encoding = []
+        for i in range(num_encodings):
+            encodings_at_i = [encoding[i] for encoding in list_of_encodings]
+            if method == 'union':
+                combined = 0
+                for enc in encodings_at_i:
+                    combined |= enc
+            elif method == 'intersection':
+                combined = ~0  # All bits set
+                for enc in encodings_at_i:
+                    combined &= enc
+            else:
+                raise ValueError("Method must be 'union' or 'intersection'.")
+            combined_encoding.append(combined)
+        
+        return combined_encoding
        
     
 if __name__ == "__main__":
