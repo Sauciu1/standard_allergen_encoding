@@ -32,6 +32,7 @@ const WORD_POOL = [
 // State
 let selectedAllergens = [];
 let isDropdownOpen = false;
+let html5QrCode = null;
 
 // ==========================================
 // 2. ENCODING/DECODING FUNCTIONS
@@ -418,23 +419,173 @@ function setupDecode() {
 
     decodeBtn.addEventListener('click', () => {
         const code = decodeInput.value.trim().toLowerCase();
-        const allergenIds = decodeWords(code);
-
-        if (allergenIds) {
-            const listContainer = document.getElementById('decodedAllergensList');
-            listContainer.innerHTML = '';
-
-            allergenIds.forEach(id => {
-                const allergen = ALLERGENS.find(a => a.id === id);
-                if (allergen) {
-                    const span = document.createElement('span');
-                    span.className = "px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-sm font-medium text-blue-700 flex items-center gap-2";
-                    span.innerHTML = `<span>${allergen.emoji}</span> ${allergen.name}`;
-                    listContainer.appendChild(span);
-                }
-            });
-
-            decodeResult.classList.remove('hidden');
-        }
+        processDecodedCode(code);
     });
+
+    // Setup decode tabs
+    setupDecodeTabs();
+
+    // Setup QR Scanner
+    setupQrScanner();
+}
+
+function processDecodedCode(code) {
+    const allergenIds = decodeWords(code);
+    const decodeResult = document.getElementById('decodeResult');
+
+    if (allergenIds) {
+        const listContainer = document.getElementById('decodedAllergensList');
+        listContainer.innerHTML = '';
+
+        allergenIds.forEach(id => {
+            const allergen = ALLERGENS.find(a => a.id === id);
+            if (allergen) {
+                const span = document.createElement('span');
+                span.className = "px-4 py-2 rounded-full bg-blue-50 border border-blue-200 text-sm font-medium text-blue-700 flex items-center gap-2";
+                span.innerHTML = `<span>${allergen.emoji}</span> ${allergen.name}`;
+                listContainer.appendChild(span);
+            }
+        });
+
+        decodeResult.classList.remove('hidden');
+    }
+}
+
+function setupDecodeTabs() {
+    const manualInputTab = document.getElementById('manualInputTab');
+    const scanQrTab = document.getElementById('scanQrTab');
+    const manualInputSection = document.getElementById('manualInputSection');
+    const scanQrSection = document.getElementById('scanQrSection');
+
+    if (!manualInputTab || !scanQrTab) return;
+
+    manualInputTab.addEventListener('click', () => {
+        // Update tab styles
+        manualInputTab.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+        manualInputTab.classList.remove('text-gray-500');
+        scanQrTab.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+        scanQrTab.classList.add('text-gray-500');
+
+        // Show/hide sections
+        manualInputSection.classList.remove('hidden');
+        scanQrSection.classList.add('hidden');
+
+        // Stop scanner if running
+        stopQrScanner();
+    });
+
+    scanQrTab.addEventListener('click', () => {
+        // Update tab styles
+        scanQrTab.classList.add('bg-white', 'shadow-sm', 'text-gray-900');
+        scanQrTab.classList.remove('text-gray-500');
+        manualInputTab.classList.remove('bg-white', 'shadow-sm', 'text-gray-900');
+        manualInputTab.classList.add('text-gray-500');
+
+        // Show/hide sections
+        scanQrSection.classList.remove('hidden');
+        manualInputSection.classList.add('hidden');
+
+        // Refresh icons
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+}
+
+function setupQrScanner() {
+    const startScanBtn = document.getElementById('startScanBtn');
+    const stopScanBtn = document.getElementById('stopScanBtn');
+
+    if (!startScanBtn) return;
+
+    startScanBtn.addEventListener('click', startQrScanner);
+
+    if (stopScanBtn) {
+        stopScanBtn.addEventListener('click', stopQrScanner);
+    }
+}
+
+function startQrScanner() {
+    const qrReader = document.getElementById('qrReader');
+    const qrScannerContainer = document.getElementById('qrScannerContainer');
+    const startScanContainer = document.getElementById('startScanContainer');
+    const scannedCodeDisplay = document.getElementById('scannedCodeDisplay');
+
+    if (!qrReader) return;
+
+    // Show scanner, hide start button
+    qrScannerContainer.classList.remove('hidden');
+    startScanContainer.classList.add('hidden');
+    scannedCodeDisplay.classList.add('hidden');
+
+    // Initialize scanner
+    html5QrCode = new Html5Qrcode("qrReader");
+
+    const config = {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        aspectRatio: 1.0
+    };
+
+    html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText) => {
+            // QR Code detected
+            onQrCodeScanned(decodedText);
+        },
+        (errorMessage) => {
+            // Scan error - ignore, keep scanning
+        }
+    ).catch((err) => {
+        console.error("Unable to start QR scanner:", err);
+        alert("Unable to access camera. Please ensure you have granted camera permissions.");
+        stopQrScanner();
+    });
+}
+
+function stopQrScanner() {
+    const qrScannerContainer = document.getElementById('qrScannerContainer');
+    const startScanContainer = document.getElementById('startScanContainer');
+
+    if (html5QrCode) {
+        html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+            html5QrCode = null;
+        }).catch((err) => {
+            console.error("Error stopping scanner:", err);
+        });
+    }
+
+    // Show start button, hide scanner
+    if (qrScannerContainer) qrScannerContainer.classList.add('hidden');
+    if (startScanContainer) startScanContainer.classList.remove('hidden');
+}
+
+function onQrCodeScanned(code) {
+    const scannedCodeDisplay = document.getElementById('scannedCodeDisplay');
+    const scannedCodeText = document.getElementById('scannedCodeText');
+    const decodeInput = document.getElementById('decodeInput');
+
+    // Show the scanned code
+    if (scannedCodeDisplay && scannedCodeText) {
+        scannedCodeText.textContent = code;
+        scannedCodeDisplay.classList.remove('hidden');
+    }
+
+    // Also fill the manual input field
+    if (decodeInput) {
+        decodeInput.value = code;
+        const decodeBtn = document.getElementById('decodeBtn');
+        if (decodeBtn) decodeBtn.disabled = false;
+    }
+
+    // Stop the scanner
+    stopQrScanner();
+
+    // Auto-decode after a short delay
+    setTimeout(() => {
+        processDecodedCode(code.toLowerCase());
+    }, 500);
+
+    // Refresh icons
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }

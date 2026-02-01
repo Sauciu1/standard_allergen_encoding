@@ -12,7 +12,7 @@ body {
 }
 
 .gradient-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    background: linear-gradient(135deg, #005C32 0%, #004225 100%);
 }
 
 .gradient-card {
@@ -32,7 +32,7 @@ body {
 /* Allergen Button Selected State */
 .allergen-btn.selected {
     border-color: #3b82f6;
-    background-color: #eff6ff;
+    background-color: #3b8132;
 }
 
 /* Fade In Animation */
