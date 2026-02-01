@@ -175,6 +175,7 @@ if __name__ == "__main__":
     print("Example 4: Combine multiple allergen phrase lists")
     print("=" * 50)
 
+    #test adding allergies together from different lists
     with AllergiesGetter() as getter:
         phrases_list = [
             ['Peanuts', 'Eggs'],
