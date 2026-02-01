@@ -1,0 +1,82 @@
+id,allergen,group_id
+0,almond,0
+1,brazil nut,0
+2,cashew,0
+3,chestnut,0
+4,cocoa,0
+5,coconut,0
+6,cotton seed,0
+7,flax seed,0
+8,hazelnut,0
+9,mustard,0
+10,peanut,0
+11,pecan,0
+12,pine nut,0
+13,poppy seed,0
+
+14,sesame,1
+15,sunflower seed,1
+16,walnut,1
+17,barley,1
+18,buckwheat,1
+19,maize,1
+20,oat,1
+21,rice,1
+22,rye,1
+23,wheat,1
+24,castor bean,1
+25,chickpea,1
+26,lentil,1
+27,lupin,1
+
+28,soybean,2
+29,acerola,2
+30,apple,2
+31,apricot,2
+32,avocado,2
+33,banana,2
+34,bell pepper,2
+35,cherry,2
+36,courgette,2
+37,date,2
+38,fig,2
+39,grape,2
+40,kiwi fruit,2
+41,lychee,2
+
+42,mango,3
+43,melon,3
+44,peach,3
+45,pear,3
+46,persimmon,3
+47,pineapple,3
+48,plum,3
+49,pomegranate,3
+50,pumpkin,3
+51,strawberry,3
+52,tomato,3
+53,cabbage,3
+54,carrot,3
+55,celery,3
+
+56,garlic,4
+57,lettuce,4
+58,potato,4
+59,turnip,4
+60,aniseed,4
+61,camomile,4
+62,abalone,4
+63,crab,4
+64,lobster,4
+65,oyster,4
+66,shrimp,4
+67,snail,4
+68,squid,4
+69,alaska pollock,4
+
+70,carp,5
+71,cod,5
+72,frog,5
+73,mackerel,5
+74,salmon,5
+75,tuna,5
