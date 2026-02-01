@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Code - AllergyAlly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="../index.html"
+                    class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-green-700 transition-colors">
+                    <img src="../assets/Logo.png" alt="Allergy Ally Shield Logo" width="24" height="24"
+                        style="color: #28703B;">
+                    AllergyAlly
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center justify-center flex-1 gap-8">
+                    <a href="individual.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Individual</a>
+                    <a href="group.html" class="font-medium transition-colors" style="color: #28703B;">Group</a>
+                    <a href="menu.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Menu</a>
+                    <a href="../index.html#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                    <a href="../index.html#about-us" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">About Us</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i data-lucide="menu" class="h-6 w-6 text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="container mx-auto px-4 py-4 space-y-2">
+                <a href="individual.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Individual</a>
+                <a href="group.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium" style="color: #28703B;">Group</a>
+                <a href="menu.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Menu</a>
+                <a href="../index.html#how-it-works" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">How It Works</a>
+                <a href="../index.html#about-us" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed nav -->
+    <div class="h-16"></div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-16">
+        <div class="max-w-4xl mx-auto">
+
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <!-- <div
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-6 shadow-lg">
+                    <i data-lucide="users" class="h-8 w-8 text-white"></i>
+                </div> -->
+                <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: #28703B;">
+                    Group Allergen Code
+                </h1>
+                <p class="text-gray-500 text-lg max-w-2xl mx-auto">
+                    Combine multiple people's allergen codes into one. Perfect for group dining, family events, or
+                    travel.
+                </p>
+            </div>
+
+            <!-- Add Member Card -->
+            <div class="p-8 rounded-2xl gradient-card shadow-lg bg-white mb-8">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Add Group Member</h2>
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="inputName" placeholder="Name (e.g., Sarah)"
+                        class="px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="text" id="inputCode" placeholder="Allergen code (e.g., too harry dumb)"
+                        class="px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button id="addMemberBtn" disabled
+                    class="inline-flex items-center justify-center rounded-lg bg-gray-900 px-6 py-3 text-sm font-medium text-white shadow hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    <i data-lucide="plus" class="mr-2 h-4 w-4"></i>
+                    Add Member
+                </button>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="p-8 rounded-2xl border-2 border-dashed border-gray-200 text-center">
+                <i data-lucide="users" class="h-12 w-12 text-gray-300 mx-auto mb-4"></i>
+                <p class="text-gray-500">No members added yet. Add group members above to generate a combined code.</p>
+            </div>
+
+            <!-- Members Section -->
+            <div id="membersSection" class="hidden p-8 rounded-2xl gradient-card shadow-lg bg-white mb-8">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">
+                    Group Members (<span id="memberCount">0</span>)
+                </h2>
+
+                <div id="membersList" class="space-y-3">
+                    <!-- Members will be rendered here by JavaScript -->
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-gray-100">
+                    <button id="generateGroupCodeBtn"
+                        class="w-full inline-flex items-center justify-center rounded-lg bg-green-600 px-8 py-4 text-lg font-medium text-white shadow-lg hover:bg-green-700 transition-all">
+                        Generate Combined Code
+                        <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="resultSection"
+                class="hidden p-8 rounded-2xl gradient-card shadow-xl text-center bg-white border border-green-100">
+                <p class="text-sm text-gray-500 mb-3">Combined group code</p>
+                <div id="combinedCodeText" class="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide mb-6">
+                </div>
+                <p class="text-sm text-gray-500 mb-4">Share this code with restaurants to cover everyone's allergens</p>
+                <button id="copyGroupBtn"
+                    class="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                    <i data-lucide="copy" class="mr-2 h-4 w-4"></i>
+                    Copy Code
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-100 border-t">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>AllergyAlly - Providing a voice for people with allergens</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../group-script.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+
+</html>

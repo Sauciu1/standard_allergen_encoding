@@ -1,0 +1,58 @@
+/* ==========================================
+   AllergyAlly - Shared Styles
+   ==========================================  */
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Gradient Backgrounds */
+.gradient-hero {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+}
+
+.gradient-primary {
+    background: linear-gradient(135deg, #005C32 0%, #004225 100%);
+}
+
+.gradient-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Text Gradient */
+.text-gradient {
+    background: linear-gradient(to right, #2563eb, #4f46e5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Allergen Button Selected State */
+.allergen-btn.selected {
+    border-color: #3b82f6;
+    background-color: #3b8132;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+/* Hide Section */
+.hidden-section {
+    display: none;
+}

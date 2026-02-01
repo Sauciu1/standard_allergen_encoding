@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllergyAlly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="index.html"
+                    class="flex items-center gap-2 font-bold text-xl text-gray-900 hover:text-green-700 transition-colors">
+                    <img src="../assets/Logo.png" alt="Allergy Ally Shield Logo" width="24" height="24"
+                        style="color: #28703B;">
+                    AllergyAlly
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center justify-center flex-1 gap-8">
+                    <a href="product/individual.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Individual</a>
+                    <a href="product/group.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Group</a>
+                    <a href="product/menu.html" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Menu</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>
+                    <a href="#about-us" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">About Us</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i data-lucide="menu" class="h-6 w-6 text-gray-600"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white">
+            <div class="container mx-auto px-4 py-4 space-y-2">
+                <a href="product/individual.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Individual</a>
+                <a href="product/group.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Group</a>
+                <a href="product/menu.html" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">Menu</a>
+                <a href="#how-it-works" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">How It Works</a>
+                <a href="#about-us" class="block px-4 py-2 rounded-lg hover:bg-gray-50 font-medium text-gray-600">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed nav -->
+    <div class="h-16"></div>
+
+    <!-- Hero Section -->
+    <section class="min-h-[90vh] flex items-center relative overflow-hidden" style="background-color: #28703B;">
+        <div class="container mx-auto px-4 py-20 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white text-sm font-medium mb-8 animate-fade-in">
+                    <i data-lucide="sparkles" class="h-4 w-4"></i>
+                    <span>Allergen safety, simplified</span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in"
+                    style="animation-delay: 0.1s;">
+                    Your Allergens
+                    <br />
+                    <span class="text-green-200">Unique Codes</span>
+                </h1>
+
+                <p class="text-xl text-white/90 max-w-2xl mx-auto mb-10 animate-fade-in" style="animation-delay: 0.2s;">
+                    Encode your food allergies into a memorable code that anyone can decode. Never explain your allergies again.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in"
+                    style="animation-delay: 0.3s;">
+                    <a href="product/individual.html"
+                        class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-lg font-medium shadow-lg hover:bg-gray-100 transition-colors" style="color: #28703B;">
+                        Get Your Code
+                        <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                    </a>
+
+                    <a href="#how-it-works"
+                        class="inline-flex items-center justify-center rounded-lg border-2 border-white/50 bg-transparent px-8 py-4 text-lg font-medium text-white hover:bg-white/10 transition-colors">
+                        Learn More
+                    </a>
+                </div>
+
+                <div class="mt-16 p-8 rounded-2xl bg-white shadow-xl animate-fade-in"
+                    style="animation-delay: 0.4s;">
+                    <p class="text-sm text-gray-500 mb-3">Example allergen code</p>
+                    <div class="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide">
+                        too <span style="color: #28703B;">harry</span> dumb
+                    </div>
+                    <p class="mt-4 text-gray-500">
+                        = Peanuts, Eggs, Milk, Pine nut, Tuna
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    One System, Many Uses
+                </h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                    Whether you're dining alone, with a group, or checking a menu, AllergyAlly keeps you safe.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <a href="product/individual.html"
+                    class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
+                    style="animation-delay: 0.1s;">
+                    <div
+                        class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="shield" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Individual</h3>
+                    <p class="text-gray-600">Encode your personal allergens into memorable words. Share them
+                        easily with restaurants and friends.</p>
+                    <div class="mt-6 flex items-center gap-2 text-green-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="product/group.html"
+                    class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
+                    style="animation-delay: 0.2s;">
+                    <div
+                        class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Group</h3>
+                    <p class="text-gray-600">Combine allergens from multiple people. Perfect for family dinners, events,
+                        and group travel.</p>
+                    <div class="mt-6 flex items-center gap-2 text-green-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+
+                <a href="product/menu.html"
+                    class="group block p-8 rounded-2xl gradient-card shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in"
+                    style="animation-delay: 0.3s;">
+                    <div
+                        class="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="h-7 w-7 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Menu Scanner</h3>
+                    <p class="text-gray-600">Upload any menu and instantly see which items are safe or contain your
+                        allergens.</p>
+                    <div class="mt-6 flex items-center gap-2 text-green-600 font-medium">
+                        <span>Try it now</span>
+                        <i data-lucide="arrow-right" class="h-4 w-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-green-700 mb-4">
+                    How It Works
+                </h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+                <div class="text-center animate-fade-in" style="animation-delay: 0s;">
+                    <div
+                        class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        1
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Select Allergens</h3>
+                    <p class="text-gray-600">Choose your allergens from our comprehensive list</p>
+                </div>
+
+                <div class="text-center animate-fade-in" style="animation-delay: 0.1s;">
+                    <div
+                        class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        2
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Your Code</h3>
+                    <p class="text-gray-600">Receive a unique code that represents your allergies</p>
+                </div>
+
+                <div class="text-center animate-fade-in" style="animation-delay: 0.2s;">
+                    <div
+                        class="w-16 h-16 rounded-full gradient-primary flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg">
+                        3
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Share Anywhere</h3>
+                    <p class="text-gray-600">Share your code with restaurants, friends, or scan menus</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about-us" class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-green-700 mb-4">About Us</h2>
+                    <p class="text-gray-600 text-lg">Making allergen communication simple and universal</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="p-8 rounded-2xl gradient-card shadow-lg">
+                        <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-4">
+                            <i data-lucide="heart" class="h-6 w-6 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Our Mission</h3>
+                        <p class="text-gray-600">We believe everyone deserves to dine safely and confidently.
+                            AllergyAlly makes it easy to communicate your food allergies anywhere in the world with a
+                            simple code.</p>
+                    </div>
+
+                    <div class="p-8 rounded-2xl gradient-card shadow-lg">
+                        <div class="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-4">
+                            <i data-lucide="globe" class="h-6 w-6 text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Universal & Free</h3>
+                        <p class="text-gray-600">Our system is designed to be universally understood and completely free
+                            to use. No accounts, no fees - just simple, life-saving communication.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center p-12 rounded-3xl gradient-card shadow-2xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Ready to simplify your allergen communication?
+                </h2>
+                <p class="text-gray-600 text-lg mb-8">
+                    Get your unique allergen code in seconds. It's free and always will be.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-100 border-t">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>AllergyAlly - Providing a voice for people with allergens</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+</body>
+
+</html>
