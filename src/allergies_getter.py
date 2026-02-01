@@ -53,7 +53,7 @@ class AllergiesGetter:
             Word from database representing the encoded allergies, or None if not found
         """
         # Encode allergens to number
-        encoded_number = self.encoder.encode_allergy(allergens)
+        encoded_number = self.encoder._encode_main(allergens)
         
         # Check if encoding is within database range
         total_words = self.db.get_total_words()
@@ -95,7 +95,7 @@ class AllergiesGetter:
         # logger.info(f"Mapped word '{word}' to number: {number}")
         
         # Decode number to allergens
-        allergens = self.encoder.decode_allergy(number)
+        allergens = self.encoder._decode_allergy(number)
         # logger.info(f"Decoded number {number} to allergens: {allergens}")
         
         return allergens
