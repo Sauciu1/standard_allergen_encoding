@@ -4,7 +4,6 @@ import csv
 from pathlib import Path
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-# from ..src.allergies_getter import AllergiesGetter
 
 # Store encoded codes for decoding (in production, use a database)
 code_storage = {}
@@ -90,7 +89,9 @@ def create_app(test_config=None):
     src_path = Path(__file__).parent.parent / "src"
     sys.path.insert(0, str(src_path))
     
+    # Import after adding to path
     from run_filter_meals import filter_meals, HARDCODED_MENU
+    from allergies_getter import AllergiesGetter
     
     # Serve static files from frontend
     @app.route('/')
@@ -123,36 +124,83 @@ def create_app(test_config=None):
 
     @app.route('/api/encode', methods=['POST'])
     def api_encode():
-        """Encode allergens into a three-word code."""
-        data = request.get_json()
-        allergen_ids = data.get('allergens', [])
+        """Encode allergens into database words using AllergiesGetter."""
+        try:
+            data = request.get_json()
+            allergens = data.get('allergens', [])
 
-        if not allergen_ids:
-            return jsonify({"error": "No allergens provided"}), 400
+            if not allergens:
+                return jsonify({"error": "No allergens provided"}), 400
 
-        # TODO: Implement proper encoding
-        # For now, return a placeholder response
-        return jsonify({
-            "code": "placeholder.code.here",
-            "allergens": allergen_ids
-        })
+            # Use AllergiesGetter to encode allergens to words
+            with AllergiesGetter() as getter:
+                words = getter.allergies_to_words(allergens)
+                
+                # Check if any encoding failed
+                if any(w is None for w in words):
+                    return jsonify({
+                        "error": "Some allergens could not be encoded",
+                        "allergens": allergens,
+                        "words": words
+                    }), 400
+                
+                # Join words with spaces for the code
+                code = " ".join(words)
+                
+                return jsonify({
+                    "success": True,
+                    "code": code,
+                    "words": words,
+                    "allergens": allergens
+                })
+                
+        except ValueError as e:
+            return jsonify({
+                "error": str(e)
+            }), 400
+        except Exception as e:
+            return jsonify({
+                "error": f"Server error: {str(e)}"
+            }), 500
 
     @app.route('/api/decode', methods=['POST'])
     def api_decode():
-        """Decode a three-word code back to allergens."""
-        data = request.get_json()
-        code = data.get('code', '')
+        """Decode database words back to allergens using AllergiesGetter."""
+        try:
+            data = request.get_json()
+            code = data.get('code', '')
 
-        if not code:
-            return jsonify({"error": "No code provided"}), 400
+            if not code:
+                return jsonify({"error": "No code provided"}), 400
 
-        allergen_names = decode_code(code)
+            # Split code by spaces to get individual words
+            words = code.strip().split()
+            
+            if not words:
+                return jsonify({"error": "Invalid code format"}), 400
 
-        return jsonify({
-            "success": True,
-            "menu": HARDCODED_MENU,
-            "allergens": allergen_names
-        })
+            # Use AllergiesGetter to decode words to allergens
+            with AllergiesGetter() as getter:
+                allergens = getter.words_to_allergies(words)
+                
+                if allergens is None:
+                    return jsonify({
+                        "error": "Could not decode code. One or more words not found in database.",
+                        "code": code,
+                        "words": words
+                    }), 400
+                
+                return jsonify({
+                    "success": True,
+                    "code": code,
+                    "words": words,
+                    "allergens": allergens
+                })
+                
+        except Exception as e:
+            return jsonify({
+                "error": f"Server error: {str(e)}"
+            }), 500
     
     @app.route('/health', methods=['GET'])
     def health_check():
